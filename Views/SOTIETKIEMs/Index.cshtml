@@ -1,0 +1,1213 @@
+﻿@model IEnumerable<LTW4.Models.SOTIETKIEM>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    #accordion {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+        #accordion h3 {
+            background-color: #f7f7f7;
+            color: #333;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-bottom: 1px solid #ddd;
+            margin: 0;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            border: 1px solid #ccc;
+        }
+
+        #accordion .panel {
+            padding: 0;
+            background-color: #fff;
+            display: none;
+        }
+
+        #accordion .table-responsive {
+            margin: 0;
+        }
+
+        #accordion div {
+            max-height: auto;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        #accordion .table {
+            margin-bottom: 0;
+        }
+
+    .btn-warning, .btn-primary, .btn-danger {
+        margin: 5px;
+        border-radius: 5px;
+    }
+
+    #accordion img {
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    .button-cell {
+        vertical-align: middle;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+</style>
+
+<h2>Sổ tiết kiệm</h2>
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Index", "SOTIETKIEMs"))
+        {
+            <div class="btn-group">
+                <div class="form-outline d-flex align-items-center" style="border: gray solid 1px; border-radius: 5px;">
+                    <input type="search" id="form1" name="search" class="form-control" placeholder="Tìm kiếm" />
+                </div>
+                <button type="submit" style="margin-left:1% ; border-radius:5px;min-width:fit-content;" class="btn btn-dark"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+            </div> 
+        }
+    </div>
+    <div class="col-md-6 d-flex justify-content-end align-items-center">
+        <button class="btn" style="background-color: #F27979;" onclick="themkh()"><i class="fas fa-user-plus"></i> Thêm giao dịch</button>
+    </div>
+</div>
+<br />
+<div id="accordion">
+    @foreach (var item in Model)
+    {
+        <h3 style="background-color: #F27979 "><strong>@Html.DisplayFor(modelItem => item.tenkh) - @Html.DisplayFor(modelItem => item.sosotk)</strong> </h3>
+        <div>
+            <div class="table-responsive">
+
+                <table width="100%" class="table" style="border-radius: 10px; overflow: hidden;">
+                    <tr>
+                        <td style="vertical-align: middle;"><strong>Ảnh:</strong></td>
+                        <td><img src="@item.anh" style="width:auto;height:auto;max-width:100px;max-height:100px" /></td>
+                        <td class="button-cell" rowspan="6">
+                            <div class="button-container">
+                                <button class="btn btn-outline-warning btn-sm" onclick="editstk('@item.sosotk','@item.tenkh','@item.socmnd','@item.ghichu','@item.diachi','@item.anh')"><i class="fa-regular fa-pen-to-square"></i> Sửa</button> &nbsp
+                                <button class="btn btn-outline-primary btn-sm" onclick="detailsstk('@item.sosotk')"><i class="fa-solid fa-circle-info"></i> Chi tiết</button>&nbsp
+                                <button class="btn btn-outline-danger btn-sm" onclick="deletedetails('@item.sosotk')"><i class="fa-solid fa-trash-can"></i> Xóa</button>&nbsp
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Số CMND:</strong></td>
+                        <td>@Html.DisplayFor(modelItem => item.socmnd)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ngày lập:</strong></td>
+                        <td>@string.Format("{0:dd-MM-yyyy}", item.ngaylap)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Địa chỉ:</strong></td>
+                        <td>@Html.DisplayFor(modelItem => item.diachi)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ghi chú:</strong></td>
+                        <td>@Html.DisplayFor(modelItem => item.ghichu)</td>
+                    </tr>
+                </table>
+                <table class="table table-hover table-bordered" style="border-radius: 10px; overflow: hidden;">
+                    <tr style="background-color: #F27979">
+                        <th>Ngày giao dịch</th>
+                        <th>Số tiền giao dịch</th>
+                        <th>Tổng tiền sau lãi</th>
+                        <th>Loại lãi suất</th>
+                        <th>Ngoại tệ</th>
+                        <th></th>
+                        @foreach (var item2 in ViewBag.chitiet)
+                        {
+
+                            if (item2.sosotk == item.sosotk)
+                            {
+                            <tr>
+                                <td>
+                                    @string.Format("{0:dd-MM-yyyy}", item2.ngaygiaodich)
+                                </td>
+                                <td>
+                                    @item2.sotiengiaodich
+                                </td>
+                                <td>
+                                    @item2.tongtiensaulai
+                                </td>
+                                <td>
+                                    @item2.LAISUAT.ghichu
+                                </td>
+                                <td>
+                                    @item2.NGOAITE.tenngoaite
+                                </td>
+
+                                <td>
+                                    <div class="text-nowrap">
+                                        <button class="btn btn-outline-warning btn-sm" data-magiaodich="@item2.magiaodich" onclick="editchitiet(this)"><i class="fa-regular fa-pen-to-square"></i> Sửa</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="detailschitiet('@item2.magiaodich','@item2.sosotk','@item2.ngaygiaodich.ToString("dd/MM/yyyy")','@item2.malaisuat','@item2.mangoaite','@item2.sotiengiaodich','@item2.tongtiensaulai','@item2.hanrut.ToString("dd/MM/yyyy")','@item2.SOTIETKIEM.tenkh')"><i class="fa-solid fa-circle-info"></i> Chi tiết</button>
+                                        <button class="btn btn-outline-danger btn-sm" onclick="detailsxoa('@item2.magiaodich','@item2.sosotk','@item2.ngaygiaodich.ToString("dd/MM/yyyy")','@item2.malaisuat','@item2.mangoaite','@item2.sotiengiaodich','@item2.tongtiensaulai','@item2.hanrut.ToString("dd/MM/yyyy")','@item2.SOTIETKIEM.tenkh')"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+                    </table>
+                <br />
+                    <div align="right">
+                        <button class="btn btn-outline-primary" onclick="themchitiet('@item.sosotk')"><i class="fa-solid fa-plus"></i> Thêm giao dịch</button>
+                    </div>
+                </div>
+            </div>
+        }
+</div>
+@Html.Partial("masterdetails1")
+@Html.Partial("masterdetails2")
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/popper.js"></script>
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+            
+        $(document).ready(function () {
+            $('#accordion h3').click(function () {
+                $(this).next('.panel').slideToggle('fast');
+                $('#accordion .panel').not($(this).next()).slideUp('fast');
+            });
+        });
+
+        $(document).ready(function () {
+            $("#accordion").accordion({
+                collapsible: true,
+                active: false,
+                heightStyle: "content"
+            });
+        });
+        function themkh() {
+            $("#stkModal").modal('show');
+        };
+        $('.custom-file-input').on('change', function () {
+            var filename = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(filename);
+        });
+        function themdetails(data) {
+            return $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: "/CHITIETs/savetrade1",
+                data: data,
+                success: function (result) {
+                    if (Object.keys(result).length !== 0) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Giao dịch đã được thêm thành công.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $("#stkModal5").modal('hide');
+                                reloadmodal1 = true;
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Giao dịch chưa được hoàn thành.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình xử lý.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+
+            });
+        };
+        $('#stkModal5').on('hide.bs.modal', function (e) {
+            detailsstk($('#sosotk1').val());
+        });
+        $(document).ready(function () {
+            $("#themdetails").click(function (e) {
+                e.preventDefault();
+                var themchitietArr = [];
+                $("#detailsTable13 tbody tr").each(function () {
+                    var row = $(this);
+                    themchitietArr.push({
+                        malaisuat: row.find('td:eq(0)').text(),
+                        mangoaite: row.find('td:eq(1)').text(),
+                        sotiengiaodich: parseFloat(row.find('td:eq(2)').text().replace(/,/g, '')),
+                    });
+                });
+                var sosotk = $("#sosotk1").val();
+                var data = JSON.stringify({
+                    sosotk: sosotk,
+                    themchitiet: themchitietArr
+                });
+                themdetails(data).done(function (response) {
+                }).fail(function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi khi lưu',
+                        text: error,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+        });
+        function themgiaodich(event) {
+            event.preventDefault();
+            var tenkh = $('#tenkh1').val();
+            var socmnd = $('#socmnd1').val();
+            var diachi = $('#diachi1').val();
+            var ghichu = $('#ghichu1').val();
+            $("#tenkh10").val(tenkh);
+            $("#socmnd10").val(socmnd);
+            $("#diachi10").val(diachi);
+            $("#ghichu10").val(ghichu);
+            $("#detailsTable13 tbody").empty();
+            $('#stkModal1').modal('hide');
+            $("#stkModal5").modal('show');
+        }
+        $(document).on('click', '#addToList3', function (e) {
+            e.preventDefault();
+            var malaisuat = $.trim($("#malaisuat10").val()),
+                mangoaite = $.trim($("#mangoaite10").val()),
+                sotiengiaodich = $.trim($("#sotiengiaodich10").val()),
+                detailsTableBody13 = $("#detailsTable13 tbody");
+            if (malaisuat !== "" && mangoaite !== "" && sotiengiaodich !== "") {
+                var giaodichItem = '<tr><td>' + malaisuat + '</td><td>' + mangoaite + '</td><td>' + sotiengiaodich + '</td><td><a href="#" class="delete-product" data-itemId="0">Xóa</a></td></tr>';
+                detailsTableBody13.append(giaodichItem);
+                clearItem();
+            }
+        });
+
+
+
+        $(document).on('click', '.edit-product', function (e) {
+            e.preventDefault();
+            var magiaodich = $(this).data('id');
+            var sosotk = $("#sosotk1").val();
+            var tenkh = $("#tenkh1").val();
+            var malaisuat = $(this).data('malaisuat');
+            var mangoaite = $(this).data('mangoaite');
+            var sotiengiaodich = $(this).data('sotiengiaodich');
+            $("#sosotk8").val(sosotk);
+            $("#magiaodich8").val(magiaodich);
+            $("#tenkh8").val(tenkh);
+            $("#malaisuat8").val(malaisuat);
+            $("#malaisuat8").trigger("chosen:updated");
+            $("#mangoaite8").val(mangoaite);
+            $("#mangoaite8").trigger("chosen:updated");
+            $("#sotiengiaodich8").val(sotiengiaodich);
+            $("#stkModal1").modal('hide');
+            $("#chitietModal4").modal('show');
+        });
+
+
+        $('#chitietModal4').on('hide.bs.modal', function (e) {
+            detailsstk($('#sosotk8').val());
+        });
+
+
+        function saveeditchitiet1(event) {
+            event.preventDefault();
+            var sosotk = $('#sosotk8').val();
+            var magiaodich = $('#magiaodich8').val();
+            var tenkh = $('#tenkh8').val();
+            var malaisuat = $('#malaisuat8').val();
+            var mangoaite = $('#mangoaite8').val();
+            var sotiengiaodich = $('#sotiengiaodich8').val();
+            $.ajax({
+                url: '/CHITIETs/capnhatchitiet',
+                type: 'POST',
+                data: {
+                    magiaodich: magiaodich,
+                    sosotk: sosotk,
+                    tenkh: tenkh,
+                    mangoaite: mangoaite,
+                    malaisuat: malaisuat,
+                    sotiengiaodich: sotiengiaodich
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin khách hàng đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $("#chitietModal4").modal('hide');
+                            reloadmodal1 = true;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa thông tin khách hàng này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình cập nhật!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+        }
+
+
+        function moeditkhachhang(event) {
+            event.preventDefault();
+            var sosotk = $("#sosotk1").val();
+            var tenkh = $("#tenkh1").val();
+            var socmnd = $("#socmnd1").val();
+            var diachi = $("#diachi1").val();
+            var ghichu = $("#ghichu1").val();
+            $("#sosotk7").val(sosotk);
+            $("#tenkh7").val(tenkh);
+            $("#socmnd7").val(socmnd);
+            $("#diachi7").val(diachi);
+            $("#ghichu7").val(ghichu);
+            $("#stkModal1").modal('hide');
+            $("#stkModal4").modal('show');
+        }
+
+
+        $('#stkModal4').on('hide.bs.modal', function (e) {
+            $('#stkModal1').modal('show');
+        });
+
+
+        var reloadmodal1 = false;
+        function saveeditstk1(sosotk) {
+            var sosotk = $('#sosotk7').val();
+            var tenkh = $('#tenkh7').val();
+            var socmnd = $('#socmnd7').val();
+            var diachi = $('#diachi7').val();
+            var ghichu = $('#ghichu7').val();
+            $('#sosotk1').val(sosotk);
+            $('#tenkh1').val(tenkh);
+            $('#socmnd1').val(socmnd);
+            $('#diachi1').val(diachi);
+            $('#ghichu1').val(ghichu);
+            $.ajax({
+                url: '/SOTIETKIEMs/capnhatkh',
+                type: 'POST',
+                data: {
+                    sosotk: sosotk,
+                    tenkh: tenkh,
+                    socmnd: socmnd,
+                    diachi: diachi,
+                    ghichu: ghichu
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin khách hàng đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $("#stkModal4").modal('hide');
+                            reloadmodal1 = true;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa thông tin khách hàng này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình cập nhật!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+        }
+
+
+        $('#stkModal1').on('hidden.bs.modal', function (e) {
+            if (reloadmodal1) {
+                location.reload();
+                reloadmodal1 = false;
+            }
+        });
+
+
+        function editstk(sosotk, tenkh, socmnd, ghichu, diachi, anh) {
+            $("#sosotk2").val(sosotk);
+            $("#tenkh2").val(tenkh);
+            $("#socmnd2").val(socmnd);
+            $("#diachi2").val(diachi);
+            $("#ghichu2").val(ghichu);
+            $("#anhxemtruoc2").attr('src', anh);
+            $("#stkModal2").modal('show');
+        }
+
+        $(document).ready(function () {
+            $('#btnedit').click(function () {
+                var sosotk = $('#sosotk2').val();
+                var tenkh = $('#tenkh2').val();
+                var socmnd = $('#socmnd2').val();
+                var diachi = $('#diachi2').val();
+                var ghichu = $('#ghichu2').val();
+                var fileInput = document.getElementById('anh2').files[0];
+                var formData = new FormData;
+                formData.append('anh2', fileInput);
+                formData.append('tenkh', tenkh);
+                formData.append('sosotk', sosotk);
+                formData.append('socmnd', socmnd);
+                formData.append('diachi', diachi);
+                formData.append('ghichu', ghichu);
+                $.ajax({
+                    url: '/SOTIETKIEMs/capnhatkh',
+                    type: 'POST',
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Thành công',
+                                text: 'Thông tin khách hàng đã được chỉnh sửa.',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Đã xảy ra lỗi, không thể chỉnh sửa thông tin khách hàng này.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi trong quá trình cập nhật!',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+            });
+        });
+
+
+        function detailsstk(sosotk) {
+            $.ajax({
+                url: '/SOTIETKIEMs/details',
+                type: 'GET',
+                data: { sosotk: sosotk },
+                success: function (response) {
+                    $("#anh1").attr('src', response.anh).prop('readonly', true);
+                    $("#sosotk1").val(response.sosotk).prop('readonly', true);
+                    $("#ngaylap1").val(response.ngaylap).prop('readonly', true);
+                    $("#tenkh1").val(response.tenkh).prop('readonly', true);
+                    $("#socmnd1").val(response.socmnd).prop('readonly', true);
+                    $("#diachi1").val(response.diachi).prop('readonly', true);
+                    $("#ghichu1").val(response.ghichu).prop('readonly', true);
+                    $("#malaisuat1, #mangoaite1, #sotiengiaodich1").closest(".container").hide();
+                    $("#detailsTablestk11 tbody").empty();
+                    $.each(response.chitiets, function (index, item) {
+                        var row = '<tr><td>' + item.magiaodich + '</td><td>' + item.tenlaisuat + '</td><td>' + item.tenngoaite + '</td><td>' + item.sotiengiaodich + '</td><td>' + item.tongtiensaulai + '</td><td>' + item.ngaygiaodich + '</td><td>' + item.hanrut + '</td><td><a href="#" class="edit-product" data-id="' + item.magiaodich + '" data-malaisuat="' + item.malaisuat + '" data-mangoaite="' + item.mangoaite + '" data-sotiengiaodich="' + item.sotiengiaodich + '"><i class="fa-regular fa-pen-to-square"></i></a></td><td><a href="#" class="delete-product1" data-id="' + item.magiaodich + '"><i class="fa-solid fa-trash-can"></i></a></td></tr>';
+                        $("#detailsTablestk11 tbody").append(row);
+                    });
+
+                    $("#stkModal1").modal('show');
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Lỗi khi lấy thông tin đơn hàng.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+        function deletedetails(sosotk) {
+            $.ajax({
+                url: '/SOTIETKIEMs/details',
+                type: 'GET',
+                data: { sosotk: sosotk },
+                success: function (response) {
+                    $("#anh3").attr('src', response.anh).prop('readonly', true);
+                    $("#sosotk3").val(response.sosotk).prop('readonly', true);
+                    $("#ngaylap3").val(response.ngaylap).prop('readonly', true);
+                    $("#tenkh3").val(response.tenkh).prop('readonly', true);
+                    $("#socmnd3").val(response.socmnd).prop('readonly', true);
+                    $("#diachi3").val(response.diachi).prop('readonly', true);
+                    $("#ghichu3").val(response.ghichu).prop('readonly', true);
+                    $("#malaisuat3, #mangoaite3, #sotiengiaodich3").closest(".container").hide();
+                    $("#detailsTablestk12 tbody").empty();
+                    $.each(response.chitiets, function (index, item) {
+
+                        var row = '<tr><td>' + item.magiaodich + '</td><td>' + item.tenlaisuat + '</td><td>' + item.tenngoaite + '</td><td>' + item.sotiengiaodich + '</td><td>' + item.tongtiensaulai + '</td><td>' + item.ngaygiaodich + '</td><td>' + item.hanrut + '</td><td><a href="#" class="delete-product1" data-id="' + item.magiaodich + '"><i class="fa-solid fa-trash-can"></i></a></td></tr>';
+                        $("#detailsTablestk12 tbody").append(row);
+                    });
+                    $("#stkModal3").modal('show');
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Lỗi khi lấy thông tin đơn hàng.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+        function deletechitietstk(sosotk) {
+            var sosotk = $('#sosotk3').val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc chắn muốn xóa khách hàng này không? Việc xóa khách hàng cũng sẽ xóa đi tất cả các giao dịch của khách hàng này!',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/SOTIETKIEMs/xoastk',
+                        type: 'POST',
+                        data: { id: sosotk },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: 'Khách hàng và các giao dịch liên quan đã được xóa.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra, không thể xóa khách hàng này.',
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Lỗi server.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+
+        $(document).on('click', '#addToList1', function (e) {
+            e.preventDefault();
+            var malaisuat = $.trim($("#malaisuat").val()),
+                mangoaite = $.trim($("#mangoaite").val()),
+                sotiengiaodich = $.trim($("#sotiengiaodich").val()),
+                detailsTableBody1 = $("#detailsTable1 tbody");
+            if (malaisuat != "" && mangoaite != "" && sotiengiaodich != "") {
+                var giaodichItem = '<tr><td>' + malaisuat + '</td><td>' + mangoaite + '</td><td>' + sotiengiaodich + '</td><td><a href="#" class="delete-product" data-itemId="0">Xóa</a></td></tr>';
+                detailsTableBody1.append(giaodichItem);
+                clearItem();
+            }
+        });
+
+
+        function clearItem() {
+            $("#malaisuat").val('').trigger('chosen:updated');
+            $("#mangoaite").val('').trigger('chosen:updated');
+            $("#sotiengiaodich").val('');
+            $("#malaisuat10").val('').trigger('chosen:updated');
+            $("#mangoaite10").val('').trigger('chosen:updated');
+            $("#sotiengiaodich10").val('');
+        };
+
+
+        $(document).on('click', '.delete-product', function (e) {
+            $(this).closest('tr').fadeOut(500, function () {
+                $(this).remove();
+            });
+        });
+
+
+        $(document).on('click', '.delete-product1', function (e) {
+            e.preventDefault();
+            var magiaodich = $(this).data('id');
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc muốn xóa giao dịch này không?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/CHITIETs/xoachitiet',
+                        type: 'POST',
+                        data: { id: magiaodich },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: 'Đã xóa thành công giao dịch.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    $(e.target).closest('tr').fadeOut(500, function () {
+                                        $(this).remove();
+                                    });
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra, không thể xóa giao dịch này.',
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Lỗi server.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
+
+        function savetrade(data) {
+            return $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: "/SOTIETKIEMs/savetrade",
+                data: data,
+                success: function (result) {
+                    alert(result);
+                    location.reload();
+                },
+                error: function () {
+                    alert("Lỗi!")
+                }
+            });
+        };
+        $("#savetrade").click(function (e) {
+            e.preventDefault();
+            var chitietArr = [];
+            $("#detailsTable1 tbody tr").each(function () {
+                var row = $(this);
+                chitietArr.push({
+                    tenlaisuat: row.find('td:eq(0)').text(),
+                    tenngoaite: row.find('td:eq(1)').text(),
+                    sotiengiaodich: parseFloat(row.find('td:eq(2)').text().replace(/,/g, '')),
+                });
+            });
+            var tenkh = $("#tenkh").val();
+            var socmnd = $("#socmnd").val();
+            var diachi = $("#diachi").val();
+            var ghichu = $("#ghichu").val();
+            var fileInput = document.getElementById('anh').files[0];
+            var chitietstk = chitietArr;
+            var formData = new FormData();
+            formData.append('anh', fileInput);
+            formData.append('tenkh', tenkh);
+            formData.append('diachi', diachi);
+            formData.append('socmnd', socmnd);
+            formData.append('ghichu', ghichu);
+            formData.append('chitietstk', JSON.stringify(chitietstk));
+            $.ajax({
+                url: "/SOTIETKIEMs/savetrade",
+                type: "POST",
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                data: formData,
+                success: function (result) {
+                    if (Object.keys(result).length !== 0) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Dữ liệu đã được cập nhật thành công.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đơn hàng của bạn chưa hoàn thành.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình xử lý.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        });
+
+
+
+
+        //Chi tiết STK
+        function themchitiet(sosotk) {
+            $("#sosotkdropdown").val(sosotk);
+            $("#sosotkdropdown").trigger("chosen:updated");
+            $("#chitietModal").modal('show');
+        };
+
+
+        var reloadmodal2 = false;
+
+
+        function editdetails(event) {
+            event.preventDefault();
+            var magiaodich = $("#magiaodich4").val();
+            var sosotk = $("#sosotk4").val();
+            var tenkh = $("#tenkh4").val();
+            var malaisuat = $("#malaisuat4").val();
+            var mangoaite = $("#mangoaite4").val();
+            var sotiengiaodich = $("#sotiengiaodich4").val();
+
+            $("#sosotk9").val(sosotk);
+            $("#magiaodich9").val(magiaodich);
+            $("#tenkh9").val(tenkh);
+            $("#malaisuat9").val(malaisuat);
+            $("#malaisuat9").trigger("chosen:updated");
+            $("#mangoaite9").val(mangoaite);
+            $("#mangoaite9").trigger("chosen:updated");
+            $("#sotiengiaodich9").val(sotiengiaodich);
+            $("#chitietModal1").modal('hide');
+            $("#chitietModal5").modal('show');
+        };
+
+
+        $("#chitietModal5").on('hide.bs.modal', function (e) {
+            $("#chitietModal1").modal('show');
+        });
+
+
+        function saveeditchitiet2(event) {
+            event.preventDefault();
+            var magiaodich = $('#magiaodich9').val();
+            var sosotk = $('#sosotk9').val();
+            var tenkh = $('#tenkh9').val();
+            var malaisuat = $('#malaisuat9').val();
+            var mangoaite = $('#mangoaite9').val();
+            var sotiengiaodich = $('#sotiengiaodich9').val();
+            $('#sosotk4').val(sosotk);
+            $('#magiaodich4').val(magiaodich);
+            $('#tenkh4').val(tenkh);
+            $('#mangoaite4').val(mangoaite);
+            $('#malaisuat4').val(malaisuat);
+            $('#sotiengiaodich4').val(sotiengiaodich);
+            $.ajax({
+                url: '/CHITIETs/capnhatchitiet',
+                type: 'POST',
+                data: {
+                    magiaodich: magiaodich,
+                    sosotk: sosotk,
+                    tenkh: tenkh,
+                    mangoaite: mangoaite,
+                    malaisuat: malaisuat,
+                    sotiengiaodich: sotiengiaodich
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin khách hàng đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $("#chitietModal5").modal('hide');
+                            reloadmodal2 = true;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa thông tin khách hàng này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình cập nhật!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+        $('#chitietModal1').on('hidden.bs.modal', function (e) {
+            if (reloadmodal2) {
+                location.reload();
+                reloadmodal2 = false;
+            }
+        });
+
+
+        function editchitiet(button) {
+            var magiaodich = $(button).data('magiaodich');
+            $.ajax({
+                url: '/CHITIETs/editchitiet',
+                type: 'GET',
+                data: { id: magiaodich },
+                success: function (response) {
+                    $("#sosotk6").val(response.sosotk);
+                    $("#magiaodich6").val(response.magiaodich);
+                    $("#tenkh6").val(response.tenkh);
+                    $("#malaisuat6").val(response.malaisuat);
+                    $("#malaisuat6").trigger("chosen:updated");
+                    $("#mangoaite6").val(response.mangoaite);
+                    $("#mangoaite6").trigger("chosen:updated");
+                    $("#sotiengiaodich6").val(response.sotiengiaodich);
+                    $("#chitietModal3").modal('show');
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Lỗi khi lấy thông tin giao dịch',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+        function saveeditchitiet(event) {
+            event.preventDefault();
+            var magiaodich = $('#magiaodich6').val();
+            var sosotk = $('#sosotk6').val();
+            var tenkh = $('#tenkh6').val();
+            var malaisuat = $('#malaisuat6').val();
+            var mangoaite = $('#mangoaite6').val();
+            var sotiengiaodich = $('#sotiengiaodich6').val();
+            $.ajax({
+                url: '/CHITIETs/capnhatchitiet',
+                type: 'POST',
+                data: {
+                    magiaodich: magiaodich,
+                    sosotk: sosotk,
+                    tenkh: tenkh,
+                    malaisuat: malaisuat,
+                    mangoaite: mangoaite,
+                    sotiengiaodich: sotiengiaodich
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin giao dịch đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa thông tin giao dịch này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình chỉnh sửa!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+
+        function detailschitiet(magiaodich, sosotk, ngaygiaodich, malaisuat, mangoaite, sotiengiaodich, tongtiensaulai, hanrut, tenkh) {
+            $("#tenkh4").val(tenkh).prop('readonly', true);
+            $("#sosotk4").val(sosotk).prop('readonly', true);
+            $("#magiaodich4").val(magiaodich).prop('readonly', true);
+            $("#ngaygiaodich4").val(ngaygiaodich).prop('readonly', true);
+            $("#malaisuat4").val(malaisuat).prop('readonly', true);
+            $("#mangoaite4").val(mangoaite).prop('readonly', true);
+            $("#sotiengiaodich4").val(sotiengiaodich).prop('readonly', true);
+            $("#tongtiensaulai4").val(tongtiensaulai).prop('readonly', true);
+            $("#hanrut4").val(hanrut).prop('readonly', true);
+            $("#chitietModal1").modal('show');
+        }
+
+
+        function detailsxoa(magiaodich, sosotk, ngaygiaodich, malaisuat, mangoaite, sotiengiaodich, tongtiensaulai, hanrut, tenkh) {
+            $("#tenkh5").val(tenkh).prop('readonly', true);
+            $("#magiaodich5").val(magiaodich).prop('readonly', true);
+            $("#sosotk5").val(sosotk).prop('readonly', true);
+            $("#ngaygiaodich5").val(ngaygiaodich).prop('readonly', true);
+            $("#malaisuat5").val(malaisuat).prop('readonly', true);
+            $("#mangoaite5").val(mangoaite).prop('readonly', true);
+            $("#sotiengiaodich5").val(sotiengiaodich).prop('readonly', true);
+            $("#tongtiensaulai5").val(tongtiensaulai).prop('readonly', true);
+            $("#hanrut5").val(hanrut).prop('readonly', true);
+            $("#chitietModal2").modal('show');
+        }
+
+
+        function xoachitiet(magiaodich) {
+            var magiaodich = $('#magiaodich5').val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc muốn xóa giao dịch này không?',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/CHITIETs/xoachitiet',
+                        type: 'POST',
+                        data: { id: magiaodich },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: 'Đã xóa thành công giao dịch.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra, không thể xóa giao dịch này.',
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Lỗi server.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
+
+        $(document).on('click', '#addToList2', function (e) {
+            e.preventDefault();
+            var malaisuat = $.trim($("#malaisuat30").val()),
+                mangoaite = $.trim($("#mangoaite30").val()),
+                sotiengiaodich = $.trim($("#sotiengiaodich30").val()),
+                detailsTableBody2 = $("#detailsTable2 tbody");
+            if (malaisuat != "" && mangoaite != "" && sotiengiaodich != "") {
+                var giaodichItem = '<tr><td>' + malaisuat + '</td><td>' + mangoaite + '</td><td>' + sotiengiaodich + '</td><td><a href="#" class="delete-product" data-itemId="0">Xóa</a></td></tr>';
+                detailsTableBody2.append(giaodichItem);
+                clearItem();
+            }
+        });
+
+
+        $(document).on('click', '.delete-product', function (e) {
+            e.preventDefault();
+            $(this).closest('tr').fadeOut(500, function () {
+                $(this).remove();
+            });
+        });
+
+
+        function savetrade1(data) {
+            return $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: "/CHITIETs/savetrade1",
+                data: data,
+                success: function (result) {
+                    if (Object.keys(result).length !== 0) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Giao dịch đã được thêm thành công.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Giao dịch chưa được hoàn thành.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình xử lý.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        };
+        $(document).ready(function () {
+            $("#savetrade1").click(function (e) {
+                e.preventDefault();
+                var themchitietArr = [];
+                $("#detailsTable2 tbody tr").each(function () {
+                    var row = $(this);
+                    themchitietArr.push({
+                        malaisuat: row.find('td:eq(0)').text(),
+                        mangoaite: row.find('td:eq(1)').text(),
+                        sotiengiaodich: parseFloat(row.find('td:eq(2)').text().replace(/,/g, '')),
+                    });
+                });
+                var sosotk = $("#sosotkdropdown").val();
+                var data = JSON.stringify({
+                    sosotk: sosotk,
+                    themchitiet: themchitietArr
+                });
+                savetrade1(data).done(function (response) {
+                }).fail(function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi khi lưu',
+                        text: error,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+        });
+    </script>
+}

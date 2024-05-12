@@ -1,0 +1,283 @@
+﻿@model IEnumerable<LTW4.Models.TYGIA>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Tỷ giá</h2>
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Index", "TYGIAs"))
+        {
+            <div class="btn-group">
+                <div class="form-outline d-flex align-items-center" style="border: gray solid 1px; border-radius: 5px;">
+                    <input type="search" id="form1" name="search" class="form-control" placeholder="Tìm kiếm" />
+                </div>
+                <button type="submit" style="margin-left:1% ; border-radius:5px; min-width:fit-content;" class="btn btn-dark"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+            </div>
+        }
+    </div>
+</div>
+<br />
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" style="border-radius: 10px; overflow: hidden;">
+        <tr style="background-color: #F27979">
+            <th>
+                Mã ngoại tệ
+            </th>
+            <th>
+                Tên ngoại tệ
+            </th>
+            <th>
+                Quy ra VND
+            </th>
+            <th>
+                Ghi chú
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NGOAITE.mangoaite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NGOAITE.tenngoaite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.quyravnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ghichu)
+                </td>
+                <td style="width:18%">
+                    <button class="btn btn-outline-warning btn-sm" onclick="suatygia('@item.mangoaite','@item.NGOAITE.tenngoaite','@item.ngaybatdauapdung.ToString("dd/MM/yyyy")','@item.quyravnd','@item.ghichu')"><i class="fa-regular fa-pen-to-square"></i> Sửa</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="chitiettygia('@item.mangoaite','@item.NGOAITE.tenngoaite','@item.ngaybatdauapdung.ToString("dd/MM/yyyy")','@item.quyravnd','@item.ghichu')"><i class="fa-solid fa-circle-info"></i> Chi tiết</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="xoatygia('@item.mangoaite','@item.NGOAITE.tenngoaite','@item.ngaybatdauapdung.ToString("dd/MM/yyyy")','@item.quyravnd','@item.ghichu')"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+@Html.Partial("ModalTyGia")
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/popper.js"></script>
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        function chitiettygia(mangoaite, tenngoaite, ngaybatdauapdung, quyravnd, ghichu) {
+            $('#mangoaite22').val(mangoaite).prop('readonly', true);
+            $('#tenngoaite22').val(tenngoaite).prop('readonly', true);
+            $('#ngaybatdauapdung22').val(ngaybatdauapdung).prop('readonly', true);
+            $('#quyravnd22').val(quyravnd).prop('readonly', true);
+            $('#ghichu22').val(ghichu).prop('readonly', true);
+            $('#tygiaModal1').modal('show');
+        }
+        function xoatygia(mangoaite, tenngoaite, ngaybatdauapdung, quyravnd, ghichu) {
+            $('#mangoaite24').val(mangoaite).prop('readonly', true);
+            $('#tenngoaite24').val(tenngoaite).prop('readonly', true);
+            $('#ngaybatdauapdung24').val(ngaybatdauapdung).prop('readonly', true);
+            $('#quyravnd24').val(quyravnd).prop('readonly', true);
+            $('#ghichu24').val(ghichu).prop('readonly', true);
+            $('#tygiaModal3').modal('show');
+        }
+        function xoatygia1(mangoaite) {
+            var mangoaite = $('#mangoaite24').val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc chắn muốn xóa tỷ giá này không? Việc xóa tỷ giá sẽ ảnh hưởng tới những dữ liệu dùng đến nó!',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/TYGIAs/xoatygia',
+                        type: 'POST',
+                        data: {
+                            id1: mangoaite
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: 'Tỷ giá đã được xóa.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra, không thể xóa tỷ giá này.',
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Lỗi server.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        function moedittygia(event) {
+            event.preventDefault();
+            var mangoaite = $("#mangoaite22").val();
+            var tenngoaite = $("#tenngoaite22").val();
+            var ngaybatdauapdung = $("#ngaybatdauapdung22").val();
+            var quyravnd = $("#quyravnd22").val();
+            var ghichu = $("#ghichu22").val();
+
+            $("#mangoaite23").val(mangoaite);
+            $("#tenngoaite23").val(tenngoaite);
+            $("#ngaybatdauapdung23").val(ngaybatdauapdung);
+            $("#quyravnd23").val(quyravnd);
+            $("#ghichu23").val(ghichu);
+            $("#tygiaModal1").modal('hide');
+            $("#tygiaModal2").modal('show');
+        };
+        $("#tygiaModal2").on('hide.bs.modal', function (e) {
+            $("#tygiaModal1").modal('show');
+        });
+        var reloadmodal5 = false;
+        $('#tygiaModal1').on('hidden.bs.modal', function (e) {
+            if (reloadmodal5) {
+                location.reload();
+                reloadmodal5 = false;
+            }
+        });
+        function saveedittygia(event) {
+            event.preventDefault();
+            var mangoaite = $("#mangoaite23").val();
+            var tenngoaite = $("#tenngoaite23").val();
+            var ngaybatdauapdung = $("#ngaybatdauapdung23").val();
+            var quyravnd = $("#quyravnd23").val();
+            var ghichu = $("#ghichu23").val();
+            $("#mangoaite22").val(mangoaite);
+            $("#tenngoaite22").val(tenngoaite);
+            $("#ngaybatdauapdung22").val(ngaybatdauapdung);
+            $("#quyravnd22").val(quyravnd);
+            $("#ghichu22").val(ghichu);
+            $.ajax({
+                url: '/TYGIAs/capnhattygia',
+                type: 'POST',
+                data: {
+                    mangoaite: mangoaite,
+                    ngaybatdauapdung: ngaybatdauapdung,
+                    quyravnd: quyravnd,
+                    ghichu: ghichu,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin tỷ giá của ngoại tệ này đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $("#tygiaModal2").modal('hide');
+                            reloadmodal5 = true;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa tỷ giá của ngoại tệ này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình chỉnh sửa!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+        function suatygia(mangoaite, tenngoaite, ngaybatdauapdung, quyravnd, ghichu) {
+            $('#mangoaite21').val(mangoaite).prop('readonly', true);
+            $('#tenngoaite21').val(tenngoaite).prop('readonly', true);
+            $('#ngaybatdauapdung21').val(ngaybatdauapdung).prop('readonly', true);
+            $('#quyravnd21').val(quyravnd);
+            $('#ghichu21').val(ghichu);
+            $('#tygiaModal').modal('show');
+        }
+        function luusuatygia(event) {
+            event.preventDefault();
+            var mangoaite = $('#mangoaite21').val();
+            var ngaybatdauapdung = $('#ngaybatdauapdung21').val();
+            var quyravnd = $('#quyravnd21').val();
+            var ghichu = $('#ghichu21').val();
+            $.ajax({
+                url: '/TYGIAs/capnhattygia',
+                type: 'POST',
+                data: {
+                    mangoaite: mangoaite,
+                    ngaybatdauapdung: ngaybatdauapdung,
+                    quyravnd: quyravnd,
+                    ghichu: ghichu,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin tỷ giá của ngoại tệ này đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa tỷ giá của ngoại tệ này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình chỉnh sửa!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+    </script>
+}

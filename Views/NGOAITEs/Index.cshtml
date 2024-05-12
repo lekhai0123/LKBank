@@ -1,0 +1,561 @@
+﻿@model IEnumerable<LTW4.Models.NGOAITE>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Ngoại tệ</h2>
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Index", "NGOAITEs"))
+        {
+            <div class="btn-group">
+                <div class="form-outline d-flex align-items-center" style="border: gray solid 1px; border-radius: 5px;">
+                    <input type="search" id="form1" name="search" class="form-control" placeholder="Tìm kiếm" />
+                </div>
+                <button type="submit" style="margin-left:1% ; border-radius:5px;min-width:fit-content;" class="btn btn-dark"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+            </div>
+        }
+    </div>
+    <div class="col-md-6 d-flex justify-content-end align-items-center">
+        <button style="background-color: #F27979" class="btn" onclick="themngoaite()"><i class="fa-solid fa-plus"></i> Thêm ngoại tệ</button>
+    </div>
+</div>
+<br />
+<div class="table-responsive">
+    <table class="table table-bordered table-hover" style="border-radius: 10px; overflow: hidden;">
+        <tr style="background-color: #F27979">
+            <th>
+                Mã ngoại tệ
+            </th>
+            <th>
+                Tên ngoại tệ
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.mangoaite)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.tenngoaite)
+                </td>
+                <td style="width:18%">
+                    <button class="btn btn-outline-warning btn-sm" onclick="suangoaite('@item.mangoaite','@item.tenngoaite')"><i class="fa-regular fa-pen-to-square"></i> Sửa</button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="chitietngoaite('@item.mangoaite')"><i class="fa-solid fa-circle-info"></i> Chi tiết</button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="xoangoaite('@item.mangoaite')"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+@Html.Partial("ModalNgoaiTe")
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/popper.js"></script>
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        function themngoaite() {
+            $("#ngoaiteModal").modal('show');
+        };
+        function xoatygia2(mangoaite) {
+            var mangoaite = $('#mangoaite18').val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc chắn muốn xóa tỷ giá này không? Việc xóa tỷ giá sẽ ảnh hưởng tới những dữ liệu dùng đến nó!',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/TYGIAs/xoatygia',
+                        type: 'POST',
+                        data: {
+                            id1: mangoaite
+                        },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: 'Tỷ giá đã được xóa.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra, không thể xóa tỷ giá này.',
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Lỗi server.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        function themtygia(event) {
+            event.preventDefault();
+            var mangoaite = $("#mangoaite18").val();
+            var tenngoaite = $("#tenngoaite18").val();
+            $("#mangoaite27").val(mangoaite);
+            $("#tenngoaite27").val(tenngoaite);
+            $('#ngoaiteModal2').modal('hide');
+            $('#tygiaModal5').modal('show');
+        }
+        $('#tygiaModal5').on('hide.bs.modal', function (e) {
+            chitietngoaite($('#mangoaite18').val());
+        });
+        function themtygia1(data) {
+
+            return $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: "/TYGIAs/themtygia1",
+                data: data,
+                success: function (result) {
+                    if (Object.keys(result).length !== 0) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Giao dịch đã được thêm thành công.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#tygiaModal5').modal('hide');
+                                reloadmodal4 = true;
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Giao dịch chưa được hoàn thành.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình xử lý.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        };
+        $(document).ready(function () {
+            $("#themtygia1").click(function (e) {
+                e.preventDefault();
+                var mangoaite = $("#mangoaite18").val();
+                var quyravnd = $("#quyravnd27").val();
+                var ghichu = $("#ghichu27").val();
+                var data = JSON.stringify({
+                    mangoaite: mangoaite,
+                    quyravnd: quyravnd,
+                    ghichu: ghichu,
+                });
+                themtygia1(data).done(function (response) {
+                    $('#quyravnd18').val(response.quyravnd);
+                    $('#ghichu18').val(response.ghichu);
+                    $('#ngaybatdauapdung18').val(response.ngaybatdauapdung);
+                }).fail(function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi khi lưu',
+                        text: error,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+        });
+        function moedittygia1(event) {
+            event.preventDefault();
+            var mangoaite = $('#mangoaite18').val();
+            var tenngoaite = $('#tenngoaite18').val();
+            var quyravnd = $('#quyravnd18').val();
+            var ghichu = $('#ghichu18').val();
+            $('#mangoaite25').val(mangoaite).prop('readonly', true);
+            $('#tenngoaite25').val(tenngoaite).prop('readonly', true);
+            $('#quyravnd25').val(quyravnd);
+            $('#ghichu25').val(ghichu);
+            $('#ngoaiteModal2').modal('hide');
+            $('#tygiaModal4').modal('show');
+        }
+        $('#tygiaModal4').on('hide.bs.modal', function (e) {
+            $('#ngoaiteModal2').modal('show');
+        });
+        function saveedittygia1(event) {
+            event.preventDefault();
+            var mangoaite = $("#mangoaite25").val();
+            var tenngoaite = $("#tenngoaite25").val();
+            var quyravnd = $("#quyravnd25").val();
+            var ghichu = $("#ghichu25").val();
+            $("#mangoaite18").val(mangoaite);
+            $("#tenngoaite18").val(tenngoaite);
+            $("#quyravnd18").val(quyravnd);
+            $("#ghichu18").val(ghichu);
+            $.ajax({
+                url: '/TYGIAs/capnhattygia',
+                type: 'POST',
+                data: {
+                    mangoaite: mangoaite,
+                    quyravnd: quyravnd,
+                    ghichu: ghichu,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin tỷ giá của ngoại tệ này đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $("#tygiaModal4").modal('hide');
+                            reloadmodal4 = true;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa tỷ giá của ngoại tệ này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình chỉnh sửa!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+        function xoangoaite1(mangoaite) {
+            var mangoaite = $('#mangoaite20').val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc chắn muốn xóa ngoại tệ này không? Việc xóa ngoại tệ cũng sẽ xóa đi tất cả các dữ liệu thuộc các bảng khác nhau dùng ngoại tệ này!',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/NGOAITEs/xoangoaite',
+                        type: 'POST',
+                        data: { id: mangoaite },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: 'Ngoại tệ và các dữ liệu liên quan đã được xóa.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra, không thể xóa ngoại tệ này.',
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Lỗi server.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        function xoangoaite(mangoaite) {
+            $.ajax({
+                url: '/NGOAITEs/details',
+                type: 'GET',
+                data: { mangoaite: mangoaite },
+                success: function (response) {
+                    $("#mangoaite20").val(response.mangoaite).prop('readonly', true);
+                    $("#tenngoaite20").val(response.tenngoaite).prop('readonly', true);
+                    $.each(response.tygia, function (index, item) {
+                        $("#ngaybatdauapdung20").val(item.ngaybatdauapdung).prop('readonly', true);
+                        $("#quyravnd20").val(item.quyravnd).prop('readonly', true);
+                        $("#ghichu20").val(item.ghichu).prop('readonly', true);
+                    });
+                    $("#ngoaiteModal4").modal('show');
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Lỗi khi lấy thông tin lãi suất.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+        function moeditngoaite(event) {
+            event.preventDefault();
+            var mangoaite = $("#mangoaite18").val();
+            var tenngoaite = $("#tenngoaite18").val();
+            $("#mangoaite19").val(mangoaite).prop('readonly', true);
+            $("#tenngoaite19").val(tenngoaite);
+            $("#ngoaiteModal2").modal('hide');
+            $("#ngoaiteModal3").modal('show');
+        }
+        $('#ngoaiteModal3').on('hide.bs.modal', function (e) {
+            $('#ngoaiteModal2').modal('show');
+        });
+
+
+        var reloadmodal4 = false;
+        function saveeditngoaite(mangoaite) {
+            var mangoaite = $('#mangoaite19').val();
+            var tenngoaite = $('#tenngoaite19').val();
+            $('#mangoaite18').val(mangoaite);
+            $('#tenngoaite18').val(tenngoaite);
+            $.ajax({
+                url: '/NGOAITEs/capnhatngoaite',
+                type: 'POST',
+                data: {
+                    mangoaite: mangoaite,
+                    tenngoaite: tenngoaite,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin ngoại tệ đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $("#ngoaiteModal3").modal('hide');
+                            reloadmodal4 = true;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa ngoại tệ này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình cập nhật!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+        }
+        $('#ngoaiteModal2').on('hidden.bs.modal', function (e) {
+            if (reloadmodal4) {
+                location.reload();
+                reloadmodal4 = false;
+            }
+        });
+        function chitietngoaite(mangoaite) {
+            $.ajax({
+                url: '/NGOAITEs/details',
+                type: 'GET',
+                data: { mangoaite: mangoaite },
+                success: function (response) {
+                    $("#mangoaite18").val(response.mangoaite).prop('readonly', true);
+                    $("#tenngoaite18").val(response.tenngoaite).prop('readonly', true);
+                    $.each(response.tygia, function (index, item) {
+                        $("#ngaybatdauapdung18").val(item.ngaybatdauapdung).prop('readonly', true);
+                        $("#quyravnd18").val(item.quyravnd).prop('readonly', true);
+                        $("#ghichu18").val(item.ghichu).prop('readonly', true);
+                    });
+                    $("#ngoaiteModal2").modal('show');
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Lỗi khi lấy thông tin lãi suất.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+        function suangoaite(mangoaite, tenngoaite) {
+            $('#mangoaite17').val(mangoaite).prop('readonly', true);
+            $('#tenngoaite17').val(tenngoaite);
+            $('#ngoaiteModal1').modal('show');
+        }
+        function luusuangoaite(event) {
+            event.preventDefault();
+            var mangoaite = $('#mangoaite17').val();
+            var tenngoaite = $('#tenngoaite17').val();
+            $.ajax({
+                url: '/NGOAITEs/capnhatngoaite',
+                type: 'POST',
+                data: {
+                    mangoaite: mangoaite,
+                    tenngoaite: tenngoaite,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin ngoại tệ đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa ngoại tệ này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình chỉnh sửa!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+        function savengoaite(data) {
+            return $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: "/NGOAITEs/savengoaite",
+                data: data,
+                success: function (result) {
+                    if (Object.keys(result).length !== 0) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Ngoại tệ đã được thêm thành công.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Thêm ngoại tệ chưa được hoàn thành.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình xử lý.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        };
+        $(document).ready(function () {
+            $("#savengoaite").click(function (e) {
+                e.preventDefault();
+                var mangoaite = $("#mangoaite16").val();
+                var tenngoaite = $("#tenngoaite16").val();
+                var quyravnd = $("#quyravnd16").val();
+                var ghichu = $("#ghichu16").val();
+                var data = JSON.stringify({
+                    mangoaite: mangoaite,
+                    tenngoaite: tenngoaite,
+                    quyravnd: quyravnd,
+                    ghichu: ghichu,
+                });
+                savengoaite(data).done(function (response) {
+                }).fail(function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi khi lưu',
+                        text: error,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+        });
+    </script>
+}

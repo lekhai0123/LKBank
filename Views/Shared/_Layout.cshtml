@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<style>
+    nav {
+        position: fixed;
+        width: 100%;
+        line-height: 50px;
+    }
+        nav a{
+            padding-left:66px !important;
+        }
+
+        nav ul {
+            line-height: 30px;
+            list-style: none;
+            background: rgba(0, 0, 0, 0);
+            color: #fff;
+            padding: 0;
+            text-align: right;
+            margin: 0;
+            padding-right: 40px;
+            transition: 1s;
+        }
+
+        nav.black ul {
+            background: #000;
+        }
+
+        nav ul li {
+            display: inline-block;
+            padding: 16px 20px;
+        }
+
+        nav ul li a {
+             text-decoration: none;
+             color: #fff;
+             font-size: 16px;
+        }
+    .navbar-nav {
+        width: 100% !important;
+    }
+    .logout-item {
+        margin-left: auto !important;
+    }
+    .dropdown-item {
+        padding-left:15px !important;
+    }
+    .logout-btn{
+        padding-left:8px !important;
+    }
+</style>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - LKBank</title>
+    <link rel="icon" type="image/png" href="~/assets/brand/LKBank-removebg-preview-logo(1).png" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link href="~/Content/bootstrap-chosen.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light" style="background-color: #FFFFFF;">
+    <a class="navbar-brand" href="~/USER/Index"><img src="~/Content/img/LKBank-removebg-preview-logo(1).png" style="width: 45px; height: 45px ;"><span>LKBank</span></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="~/USER/Index">Về chúng tôi</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="~/USER/Index">Liên hệ</a>
+            </li>
+            @if (Session["Email"] != null)
+            {
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Quản lý
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div align="center"><h6><strong><i class="fa-solid fa-book-open"></i> Tài khoản</strong></h6></div>
+                        <a class="dropdown-item " href="~/SOTIETKIEMs/Index">Sổ tài khoản</a>
+                        <a class="dropdown-item " href="~/CHITIETs/Index">Chi tiết</a>
+                        <div class="dropdown-divider"></div>
+                        <div align="center"><h6><strong><i class="fa-solid fa-chart-line"></i> Lãi suất</strong></h6></div>
+                        <a class="dropdown-item " href="~/LAISUATs/Index">Lãi suất</a>
+                        <div class="dropdown-divider"></div>
+                        <div align="center"><h6><strong><i class="fa-solid fa-comments-dollar"></i> Ngoại tệ</strong></h6></div>
+                        <a class="dropdown-item " href="~/NGOAITEs/Index">Ngoại tệ</a>
+                        <a class="dropdown-item " href="~/TYGIAs/Index">Tỷ giá</a>
+                    </div>
+                </li>
+                <li class="nav-item logout-item">                    
+                    <div class="nav-item user_option">
+                        <a class="nav-link btn logout-btn" style="background-color: #F27979 " href="~/USER/Logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - LKBank Group</p>
+        </footer>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script src="~/Scripts/chosen.jquery.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".dropdown2").chosen({ width: "100%" })
+        });
+        function clearItem() {
+            $("#malaisuat").val('').trigger('chosen:updated');
+            $("#mangoaite").val('').trigger('chosen:updated');
+            $("#sotiengiaodich").val('');
+            $("#malaisuat10").val('').trigger('chosen:updated');
+            $("#mangoaite10").val('').trigger('chosen:updated');
+            $("#sotiengiaodich10").val('');
+            $("#malaisuat30").val('').trigger('chosen:updated');
+            $("#mangoaite30").val('').trigger('chosen:updated');
+            $("#sotiengiaodich30").val('');
+        };
+    </script>
+</body>
+</html>

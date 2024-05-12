@@ -1,0 +1,424 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="sotietkiemModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="CHITIET">
+          <Key>
+            <PropertyRef Name="magiaodich" />
+          </Key>
+          <Property Name="sosotk" Type="nvarchar" MaxLength="20" />
+          <Property Name="magiaodich" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ngaygiaodich" Type="date" />
+          <Property Name="malaisuat" Type="nvarchar" MaxLength="5" />
+          <Property Name="mangoaite" Type="nvarchar" MaxLength="5" />
+          <Property Name="sotiengiaodich" Type="float" />
+          <Property Name="tongtiensaulai" Type="float" />
+          <Property Name="hanrut" Type="date" />
+        </EntityType>
+        <EntityType Name="LAISUAT">
+          <Key>
+            <PropertyRef Name="malaisuat" />
+          </Key>
+          <Property Name="malaisuat" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="kyhan" Type="float" />
+          <Property Name="phantramlaisuat" Type="float" />
+          <Property Name="ghichu" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="NGOAITE">
+          <Key>
+            <PropertyRef Name="mangoaite" />
+          </Key>
+          <Property Name="mangoaite" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="tenngoaite" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="SOTIETKIEM">
+          <Key>
+            <PropertyRef Name="sosotk" />
+          </Key>
+          <Property Name="sosotk" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ngaylap" Type="date" />
+          <Property Name="tenkh" Type="nvarchar" MaxLength="30" />
+          <Property Name="socmnd" Type="nvarchar" MaxLength="20" />
+          <Property Name="anh" Type="nvarchar(max)" />
+          <Property Name="diachi" Type="nvarchar(max)" />
+          <Property Name="ghichu" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TYGIA">
+          <Key>
+            <PropertyRef Name="ngaybatdauapdung" />
+            <PropertyRef Name="mangoaite" />
+          </Key>
+          <Property Name="ngaybatdauapdung" Type="date" Nullable="false" />
+          <Property Name="mangoaite" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="quyravnd" Type="float" />
+          <Property Name="ghichu" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="username" Type="nvarchar" MaxLength="50" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK__CHITIET__malaisu__787EE5A0">
+          <End Role="LAISUAT" Type="Self.LAISUAT" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CHITIET" Type="Self.CHITIET" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LAISUAT">
+              <PropertyRef Name="malaisuat" />
+            </Principal>
+            <Dependent Role="CHITIET">
+              <PropertyRef Name="malaisuat" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CHITIET__mangoai__797309D9">
+          <End Role="NGOAITE" Type="Self.NGOAITE" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CHITIET" Type="Self.CHITIET" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NGOAITE">
+              <PropertyRef Name="mangoaite" />
+            </Principal>
+            <Dependent Role="CHITIET">
+              <PropertyRef Name="mangoaite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CHITIET__sosotk__778AC167">
+          <End Role="SOTIETKIEM" Type="Self.SOTIETKIEM" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="CHITIET" Type="Self.CHITIET" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SOTIETKIEM">
+              <PropertyRef Name="sosotk" />
+            </Principal>
+            <Dependent Role="CHITIET">
+              <PropertyRef Name="sosotk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TYGIA__mangoaite__7C4F7684">
+          <End Role="NGOAITE" Type="Self.NGOAITE" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TYGIA" Type="Self.TYGIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NGOAITE">
+              <PropertyRef Name="mangoaite" />
+            </Principal>
+            <Dependent Role="TYGIA">
+              <PropertyRef Name="mangoaite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="sotietkiemModelStoreContainer">
+          <EntitySet Name="CHITIET" EntityType="Self.CHITIET" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LAISUAT" EntityType="Self.LAISUAT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="NGOAITE" EntityType="Self.NGOAITE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SOTIETKIEM" EntityType="Self.SOTIETKIEM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TYGIA" EntityType="Self.TYGIA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USER" EntityType="Self.USER" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__CHITIET__malaisu__787EE5A0" Association="Self.FK__CHITIET__malaisu__787EE5A0">
+            <End Role="LAISUAT" EntitySet="LAISUAT" />
+            <End Role="CHITIET" EntitySet="CHITIET" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CHITIET__mangoai__797309D9" Association="Self.FK__CHITIET__mangoai__797309D9">
+            <End Role="NGOAITE" EntitySet="NGOAITE" />
+            <End Role="CHITIET" EntitySet="CHITIET" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CHITIET__sosotk__778AC167" Association="Self.FK__CHITIET__sosotk__778AC167">
+            <End Role="SOTIETKIEM" EntitySet="SOTIETKIEM" />
+            <End Role="CHITIET" EntitySet="CHITIET" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TYGIA__mangoaite__7C4F7684" Association="Self.FK__TYGIA__mangoaite__7C4F7684">
+            <End Role="NGOAITE" EntitySet="NGOAITE" />
+            <End Role="TYGIA" EntitySet="TYGIA" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="sotietkiemModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="sotietkiemEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CHITIETs" EntityType="sotietkiemModel.CHITIET" />
+          <EntitySet Name="LAISUATs" EntityType="sotietkiemModel.LAISUAT" />
+          <EntitySet Name="NGOAITEs" EntityType="sotietkiemModel.NGOAITE" />
+          <EntitySet Name="SOTIETKIEMs" EntityType="sotietkiemModel.SOTIETKIEM" />
+          <EntitySet Name="sysdiagrams" EntityType="sotietkiemModel.sysdiagram" />
+          <AssociationSet Name="FK__CHITIET__malaisu__787EE5A0" Association="sotietkiemModel.FK__CHITIET__malaisu__787EE5A0">
+            <End Role="LAISUAT" EntitySet="LAISUATs" />
+            <End Role="CHITIET" EntitySet="CHITIETs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CHITIET__mangoai__797309D9" Association="sotietkiemModel.FK__CHITIET__mangoai__797309D9">
+            <End Role="NGOAITE" EntitySet="NGOAITEs" />
+            <End Role="CHITIET" EntitySet="CHITIETs" />
+          </AssociationSet>
+          <AssociationSet Name="FK__CHITIET__sosotk__778AC167" Association="sotietkiemModel.FK__CHITIET__sosotk__778AC167">
+            <End Role="SOTIETKIEM" EntitySet="SOTIETKIEMs" />
+            <End Role="CHITIET" EntitySet="CHITIETs" />
+          </AssociationSet>
+          <EntitySet Name="TYGIAs" EntityType="sotietkiemModel.TYGIA" />
+          <AssociationSet Name="FK__TYGIA__mangoaite__7C4F7684" Association="sotietkiemModel.FK__TYGIA__mangoaite__7C4F7684">
+            <End Role="NGOAITE" EntitySet="NGOAITEs" />
+            <End Role="TYGIA" EntitySet="TYGIAs" />
+          </AssociationSet>
+          <EntitySet Name="USERs" EntityType="sotietkiemModel.USER" />
+        </EntityContainer>
+        <EntityType Name="CHITIET">
+          <Key>
+            <PropertyRef Name="magiaodich" />
+          </Key>
+          <Property Name="sosotk" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="magiaodich" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ngaygiaodich" Type="DateTime" Precision="0" />
+          <Property Name="malaisuat" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="mangoaite" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="sotiengiaodich" Type="Double" />
+          <Property Name="tongtiensaulai" Type="Double" />
+          <Property Name="hanrut" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="LAISUAT" Relationship="sotietkiemModel.FK__CHITIET__malaisu__787EE5A0" FromRole="CHITIET" ToRole="LAISUAT" />
+          <NavigationProperty Name="NGOAITE" Relationship="sotietkiemModel.FK__CHITIET__mangoai__797309D9" FromRole="CHITIET" ToRole="NGOAITE" />
+          <NavigationProperty Name="SOTIETKIEM" Relationship="sotietkiemModel.FK__CHITIET__sosotk__778AC167" FromRole="CHITIET" ToRole="SOTIETKIEM" />
+        </EntityType>
+        <EntityType Name="LAISUAT">
+          <Key>
+            <PropertyRef Name="malaisuat" />
+          </Key>
+          <Property Name="malaisuat" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="kyhan" Type="Double" />
+          <Property Name="phantramlaisuat" Type="Double" />
+          <Property Name="ghichu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CHITIETs" Relationship="sotietkiemModel.FK__CHITIET__malaisu__787EE5A0" FromRole="LAISUAT" ToRole="CHITIET" />
+        </EntityType>
+        <EntityType Name="NGOAITE">
+          <Key>
+            <PropertyRef Name="mangoaite" />
+          </Key>
+          <Property Name="mangoaite" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="tenngoaite" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CHITIETs" Relationship="sotietkiemModel.FK__CHITIET__mangoai__797309D9" FromRole="NGOAITE" ToRole="CHITIET" />
+          <NavigationProperty Name="TYGIAs" Relationship="sotietkiemModel.FK__TYGIA__mangoaite__7C4F7684" FromRole="NGOAITE" ToRole="TYGIA" />
+        </EntityType>
+        <EntityType Name="SOTIETKIEM">
+          <Key>
+            <PropertyRef Name="sosotk" />
+          </Key>
+          <Property Name="sosotk" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ngaylap" Type="DateTime" Precision="0" />
+          <Property Name="tenkh" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="socmnd" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="diachi" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ghichu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="CHITIETs" Relationship="sotietkiemModel.FK__CHITIET__sosotk__778AC167" FromRole="SOTIETKIEM" ToRole="CHITIET" />
+          <Property Name="anh" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK__CHITIET__malaisu__787EE5A0">
+          <End Type="sotietkiemModel.LAISUAT" Role="LAISUAT" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="sotietkiemModel.CHITIET" Role="CHITIET" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LAISUAT">
+              <PropertyRef Name="malaisuat" />
+            </Principal>
+            <Dependent Role="CHITIET">
+              <PropertyRef Name="malaisuat" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CHITIET__mangoai__797309D9">
+          <End Type="sotietkiemModel.NGOAITE" Role="NGOAITE" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="sotietkiemModel.CHITIET" Role="CHITIET" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NGOAITE">
+              <PropertyRef Name="mangoaite" />
+            </Principal>
+            <Dependent Role="CHITIET">
+              <PropertyRef Name="mangoaite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__CHITIET__sosotk__778AC167">
+          <End Type="sotietkiemModel.SOTIETKIEM" Role="SOTIETKIEM" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="sotietkiemModel.CHITIET" Role="CHITIET" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SOTIETKIEM">
+              <PropertyRef Name="sosotk" />
+            </Principal>
+            <Dependent Role="CHITIET">
+              <PropertyRef Name="sosotk" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TYGIA">
+          <Key>
+            <PropertyRef Name="ngaybatdauapdung" />
+            <PropertyRef Name="mangoaite" />
+          </Key>
+          <Property Name="ngaybatdauapdung" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="mangoaite" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="quyravnd" Type="Double" />
+          <Property Name="ghichu" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="NGOAITE" Relationship="sotietkiemModel.FK__TYGIA__mangoaite__7C4F7684" FromRole="TYGIA" ToRole="NGOAITE" />
+        </EntityType>
+        <Association Name="FK__TYGIA__mangoaite__7C4F7684">
+          <End Type="sotietkiemModel.NGOAITE" Role="NGOAITE" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="sotietkiemModel.TYGIA" Role="TYGIA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="NGOAITE">
+              <PropertyRef Name="mangoaite" />
+            </Principal>
+            <Dependent Role="TYGIA">
+              <PropertyRef Name="mangoaite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="USER">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="sotietkiemModelStoreContainer" CdmEntityContainer="sotietkiemEntities">
+          <EntitySetMapping Name="CHITIETs">
+            <EntityTypeMapping TypeName="sotietkiemModel.CHITIET">
+              <MappingFragment StoreEntitySet="CHITIET">
+                <ScalarProperty Name="hanrut" ColumnName="hanrut" />
+                <ScalarProperty Name="tongtiensaulai" ColumnName="tongtiensaulai" />
+                <ScalarProperty Name="sotiengiaodich" ColumnName="sotiengiaodich" />
+                <ScalarProperty Name="mangoaite" ColumnName="mangoaite" />
+                <ScalarProperty Name="malaisuat" ColumnName="malaisuat" />
+                <ScalarProperty Name="ngaygiaodich" ColumnName="ngaygiaodich" />
+                <ScalarProperty Name="magiaodich" ColumnName="magiaodich" />
+                <ScalarProperty Name="sosotk" ColumnName="sosotk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LAISUATs">
+            <EntityTypeMapping TypeName="sotietkiemModel.LAISUAT">
+              <MappingFragment StoreEntitySet="LAISUAT">
+                <ScalarProperty Name="ghichu" ColumnName="ghichu" />
+                <ScalarProperty Name="phantramlaisuat" ColumnName="phantramlaisuat" />
+                <ScalarProperty Name="kyhan" ColumnName="kyhan" />
+                <ScalarProperty Name="malaisuat" ColumnName="malaisuat" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NGOAITEs">
+            <EntityTypeMapping TypeName="sotietkiemModel.NGOAITE">
+              <MappingFragment StoreEntitySet="NGOAITE">
+                <ScalarProperty Name="tenngoaite" ColumnName="tenngoaite" />
+                <ScalarProperty Name="mangoaite" ColumnName="mangoaite" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SOTIETKIEMs">
+            <EntityTypeMapping TypeName="sotietkiemModel.SOTIETKIEM">
+              <MappingFragment StoreEntitySet="SOTIETKIEM">
+                <ScalarProperty Name="anh" ColumnName="anh" />
+                <ScalarProperty Name="ghichu" ColumnName="ghichu" />
+                <ScalarProperty Name="diachi" ColumnName="diachi" />
+                <ScalarProperty Name="socmnd" ColumnName="socmnd" />
+                <ScalarProperty Name="tenkh" ColumnName="tenkh" />
+                <ScalarProperty Name="ngaylap" ColumnName="ngaylap" />
+                <ScalarProperty Name="sosotk" ColumnName="sosotk" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="sotietkiemModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TYGIAs">
+            <EntityTypeMapping TypeName="sotietkiemModel.TYGIA">
+              <MappingFragment StoreEntitySet="TYGIA">
+                <ScalarProperty Name="ghichu" ColumnName="ghichu" />
+                <ScalarProperty Name="quyravnd" ColumnName="quyravnd" />
+                <ScalarProperty Name="mangoaite" ColumnName="mangoaite" />
+                <ScalarProperty Name="ngaybatdauapdung" ColumnName="ngaybatdauapdung" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USERs">
+            <EntityTypeMapping TypeName="sotietkiemModel.USER">
+              <MappingFragment StoreEntitySet="USER">
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="username" ColumnName="username" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

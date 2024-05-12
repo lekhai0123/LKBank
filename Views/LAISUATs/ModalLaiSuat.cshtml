@@ -1,0 +1,226 @@
+﻿@{
+    LTW4.Models.sotietkiemEntities db = new LTW4.Models.sotietkiemEntities();
+}
+<style>
+    input, select, textarea {
+        max-width: none !important;
+    }
+</style>
+<div class="modal fade" id="laisuatModal">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Thêm lãi suất</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết lãi suất</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã lãi suất</label>
+                                    <input type="text" id="malaisuat11" name="malaisuat" class="form-control" placeholder="Mã lãi suất"/>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Kỳ hạn</label>
+                                    <input type="text" id="kyhan11" name="kyhan" class="form-control" placeholder="Kỳ hạn"/>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Phần trăm lãi suất</label>
+                                    <input type="text" id="phantramlaisuat11" name="phantramlaisuat" class="form-control" placeholder="Phần trăm lãi suất"/>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu11" name="ghichu" class="form-control" placeholder="Ghi chú"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button id="savelaisuat" class="btn btn-danger">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit Modal-->
+<div class="modal fade" id="laisuatModal1">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chỉnh sửa lãi suất</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết lãi suất</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã lãi suất</label>
+                                    <input type="text" id="malaisuat12" name="malaisuat" class="form-control" placeholder="Mã lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Kỳ hạn</label>
+                                    <input type="text" id="kyhan12" name="kyhan" class="form-control" placeholder="Kỳ hạn" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Phần trăm lãi suất</label>
+                                    <input type="text" id="phantramlaisuat12" name="phantramlaisuat" class="form-control" placeholder="Phần trăm lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu12" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="luueditls(event)" class="btn btn-danger">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Details modal-->
+<div class="modal fade" id="laisuatModal2">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chi tiết lãi suất</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết lãi suất</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã lãi suất</label>
+                                    <input type="text" id="malaisuat13" name="malaisuat" class="form-control" placeholder="Mã lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Kỳ hạn</label>
+                                    <input type="text" id="kyhan13" name="kyhan" class="form-control" placeholder="Kỳ hạn" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Phần trăm lãi suất</label>
+                                    <input type="text" id="phantramlaisuat13" name="phantramlaisuat" class="form-control" placeholder="Phần trăm lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu13" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="moeditlaisuat(event)" class="btn btn-danger">Chỉnh sửa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Details edit modal-->
+<div class="modal fade" id="laisuatModal3">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chỉnh sửa lãi suất</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết lãi suất</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã lãi suất</label>
+                                    <input type="text" id="malaisuat14" name="malaisuat" class="form-control" placeholder="Mã lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Kỳ hạn</label>
+                                    <input type="text" id="kyhan14" name="kyhan" class="form-control" placeholder="Kỳ hạn" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Phần trăm lãi suất</label>
+                                    <input type="text" id="phantramlaisuat14" name="phantramlaisuat" class="form-control" placeholder="Phần trăm lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu14" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="saveeditlaisuat(event)" class="btn btn-danger">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Details delete-->
+<div class="modal fade" id="laisuatModal4">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Xóa lãi suất</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết lãi suất</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã lãi suất</label>
+                                    <input type="text" id="malaisuat15" name="malaisuat" class="form-control" placeholder="Mã lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Kỳ hạn</label>
+                                    <input type="text" id="kyhan15" name="kyhan" class="form-control" placeholder="Kỳ hạn" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Phần trăm lãi suất</label>
+                                    <input type="text" id="phantramlaisuat15" name="phantramlaisuat" class="form-control" placeholder="Phần trăm lãi suất" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu15" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="deletelaisuat(event)" class="btn btn-danger">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>

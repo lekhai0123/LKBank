@@ -1,0 +1,213 @@
+﻿
+@{
+    Layout = null;
+}
+<style>
+    .login-item {
+        margin-left: auto !important;
+    }
+    .navbar-nav{
+        width:100% !important;
+    }
+    .logout-item{
+        margin-left:auto !important;        
+    }
+    .fab {
+        line-height:unset !important;
+    }
+</style>
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - LKBank</title>
+    <link rel="icon" type="image/png" href="~/assets/brand/LKBank-removebg-preview-logo(1).png" />
+    <link href="../../Content/css/stylesheet.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+    <link href="~/fontawesome/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+
+
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top " id="mainNav">
+        <a class="navbar-brand" href="#"><img src="~/Content/img/LKBank-removebg-preview-logo(1).png" style="width: 50px; height: 50px ;"><span>LKBank</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            Menu
+            <i class="fas fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#hobbys">Về chúng tôi</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Liên hệ</a>
+                </li>
+                @if(Session["Email"] != null){
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Quản lý
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <div align="center"><h6><strong><i class="fa-solid fa-book-open"></i> Tài khoản</strong></h6></div>
+                        <a class="dropdown-item" href="~/SOTIETKIEMs/Index">Sổ tài khoản</a>
+                        <a class="dropdown-item" href="~/CHITIETs/Index">Chi tiết</a>
+                        <div class="dropdown-divider"></div>
+                        <div align="center"><h6><strong><i class="fa-solid fa-chart-line"></i> Lãi suất</strong></h6></div>
+                        <a class="dropdown-item" href="~/LAISUATs/Index">Lãi suất</a>
+                        <div class="dropdown-divider"></div>
+                        <div align="center"><h6><strong><i class="fa-solid fa-comments-dollar"></i> Ngoại tệ</strong></h6></div>
+                        <a class="dropdown-item" href="~/NGOAITEs/Index">Ngoại tệ</a>
+                        <a class="dropdown-item" href="~/TYGIAs/Index">Tỷ giá</a>
+                    </div>
+                </li>
+                <li class="nav-item logout-item btn-group">
+                    <div class="nav-link user_option">
+                        <i class="fa-regular fa-user"></i>
+                        <span>
+                            @Session["Username"]
+                        </span>
+                    </div>
+                    <a class="nav-link" href="~/USER/Logout"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+                </li>
+                }
+                else{
+                <li class="nav-item login-item">
+                    <a class="nav-link" href="~/USER/Login">Đăng nhập</a>
+                </li>
+                }
+            </ul>
+
+        </div>
+    </nav>
+    <header>
+        <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+            <div class="d-flex justify-content-center">
+                <div class="text-center">
+                    <h1 class="ml11">
+                        <span class="text-wrapper">
+                            <span class="line line1"></span>
+                            <span class="letters">Mang đến sự thịnh vượng</span>
+                        </span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section id="hobbys">
+            <div class="contentPage">
+                <div class="row">
+                    <div class="col-lg-1 col-sm-0">
+                    </div>
+
+                    <div class="col-lg-6 col-sm-12 contentOne">
+                        <img class="contentPicture" src="~/Content/img/GettyImages-913326906-1600x900.jpg">
+                        <br><br>
+                    </div>
+                    <div class="col-lg-4 col-sm-12 contentOne">
+                        <div class="contentText">
+                            <h1 class="m-0">Về chúng tôi</h1>
+                            <hr class="my-4 mx-auto" />
+                            <div class="medium text-black-100">
+                                LKBank là một ngân hàng tiên phong trong lĩnh vực công nghệ tài chính, cung cấp các dịch vụ ngân hàng hiện đại và tiện lợi. Với cam kết đem đến trải nghiệm khách hàng tốt nhất, LKBank luôn hướng tới sự tiện lợi và an toàn cho mọi giao dịch tài chính.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 col-sm-0"></div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-2 col-sm-0">
+                    </div>
+
+                    <div class="col-lg-8 col-sm-12 contentTwo">
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img class="d-block w-100" src="~/Content/img/R.jpg" alt="First slide">
+
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="d-block w-100" src="~/Content/img/R (1).jpg" alt="Second slide">
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="d-block w-100" src="~/Content/img/R (2).jpg" alt="Third slide">
+                                </div>
+                                <div class="carousel-item">
+                                    <img class="d-block w-100" src="~/Content/img/R (3).jpg" alt="Fourth slide">
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-sm-0"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-section">
+            <div class="container px-4 px-lg-5" id="contact">
+                <div class="row gx-4 gx-lg-5">
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-map-marked-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Address</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">22 Lê Thánh Tôn, Quận 3, TP Hồ Chí Minh</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-envelope text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Email</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">1150080020@sv.hcmunre.edu.vn</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card py-4 h-100">
+                            <div class="card-body text-center">
+                                <i class="fas fa-mobile-alt text-primary mb-2"></i>
+                                <h4 class="text-uppercase m-0">Phone</h4>
+                                <hr class="my-4 mx-auto" />
+                                <div class="small text-black-50">+84 76 768 12 48</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br><br>
+                <div class="social d-flex justify-content-center">
+                    <a class="mx-2" href="https://l.facebook.com/l.php?u=https%3A%2F%2Fwww.instagram.com%2Fkha.i01%2F%3Ffbclid%3DIwZXh0bgNhZW0CMTAAAR2M9l064zxNXVLlKCEvZkzFog9xzyGeTUuip4XsRBcrNwXjLOKBJSdXD48_aem_AYh_Mits5nElSo-NgK7VF3nj1Pch_N9cZ_pjPwTM-G1qkiHNtt-XMxSPWUTh9I8JAWMpOazVjebpgrPxovwRGsHS&h=AT0AtyqrqAu8yLQY2UO7V_d-eKklt7JjKcTJw2yafMBX0k3_YAYot5whUJl9i47SUeNAzecbfUrUbOPIGLRUWW1F_QBGEyMDC-uwMRuRtPenPYvc5iiE4kNLcPbuQg9P4HUt4K6U913JjgomXjZF1g" target="_blank"><i class="fab fa-instagram" ></i></a>
+
+                    <a class="mx-2" href="https://github.com/lekhai0123" target="_blank"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>Website by LKBank</footer>
+    <script src="../../Content/js/scripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+﻿@{
+    LTW4.Models.sotietkiemEntities db = new LTW4.Models.sotietkiemEntities();
+}
+<style>
+    input, select, textarea {
+        max-width: none !important;
+    }
+</style>
+<div class="modal fade" id="tygiaModal">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chỉnh sửa tỷ giá</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết ngoại tệ</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã ngoại tệ</label>
+                                    <input type="text" id="mangoaite21" name="mangoaite" class="form-control" placeholder="Mã ngoại tệ" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Tên ngoại tệ</label>
+                                    <input type="text" id="tenngoaite21" name="tenngoaite" class="form-control" placeholder="Tên ngoại tệ" />
+                                </div>
+
+                                <h5 style="margin-top:10px;color:#FF6347">Chi tiết tỷ giá</h5>
+                                <hr />
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ngày bắt đầu áp dụng</label>
+                                    <input type="text" id="ngaybatdauapdung21" name="ngaybatdauapdung" class="form-control" placeholder="Ngày bắt đầu áp dụng" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Quy ra VND</label>
+                                    <input type="text" id="quyravnd21" name="quyravnd" class="form-control" placeholder="Quy ra VND" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu21" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="luusuatygia(event)" class="btn btn-danger">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Details Modal-->
+<div class="modal fade" id="tygiaModal1">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chi tiết tỷ giá</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết ngoại tệ</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã ngoại tệ</label>
+                                    <input type="text" id="mangoaite22" name="mangoaite" class="form-control" placeholder="Mã ngoại tệ" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Tên ngoại tệ</label>
+                                    <input type="text" id="tenngoaite22" name="tenngoaite" class="form-control" placeholder="Tên ngoại tệ" />
+                                </div>
+
+                                <h5 style="margin-top:10px;color:#FF6347">Chi tiết tỷ giá</h5>
+                                <hr />
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ngày bắt đầu áp dụng</label>
+                                    <input type="text" id="ngaybatdauapdung22" name="ngaybatdauapdung" class="form-control" placeholder="Ngày bắt đầu áp dụng" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Quy ra VND</label>
+                                    <input type="text" id="quyravnd22" name="quyravnd" class="form-control" placeholder="Quy ra VND" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu22" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="moedittygia(event)" class="btn btn-danger">Sửa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--edit details-->
+<div class="modal fade" id="tygiaModal2">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chỉnh sửa tỷ giá</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết ngoại tệ</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã ngoại tệ</label>
+                                    <input type="text" id="mangoaite23" name="mangoaite" class="form-control" placeholder="Mã ngoại tệ" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Tên ngoại tệ</label>
+                                    <input type="text" id="tenngoaite23" name="tenngoaite" class="form-control" placeholder="Tên ngoại tệ" />
+                                </div>
+
+                                <h5 style="margin-top:10px;color:#FF6347">Chi tiết tỷ giá</h5>
+                                <hr />
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ngày bắt đầu áp dụng</label>
+                                    <input type="text" id="ngaybatdauapdung23" name="ngaybatdauapdung" class="form-control" placeholder="Ngày bắt đầu áp dụng" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Quy ra VND</label>
+                                    <input type="text" id="quyravnd23" name="quyravnd" class="form-control" placeholder="Quy ra VND" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu23" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="saveedittygia(event)" class="btn btn-danger">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--details delete-->
+<div class="modal fade" id="tygiaModal3">
+    <div class="modal-dialog" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Xóa tỷ giá</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết ngoại tệ</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Mã ngoại tệ</label>
+                                    <input type="text" id="mangoaite24" name="mangoaite" class="form-control" placeholder="Mã ngoại tệ" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Tên ngoại tệ</label>
+                                    <input type="text" id="tenngoaite24" name="tenngoaite" class="form-control" placeholder="Tên ngoại tệ" />
+                                </div>
+
+                                <h5 style="margin-top:10px;color:#FF6347">Chi tiết tỷ giá</h5>
+                                <hr />
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ngày bắt đầu áp dụng</label>
+                                    <input type="text" id="ngaybatdauapdung24" name="ngaybatdauapdung" class="form-control" placeholder="Ngày bắt đầu áp dụng" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Quy ra VND</label>
+                                    <input type="text" id="quyravnd24" name="quyravnd" class="form-control" placeholder="Quy ra VND" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu24" name="ghichu" class="form-control" placeholder="Ghi chú" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="xoatygia1(event)" class="btn btn-danger">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>

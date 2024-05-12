@@ -1,0 +1,348 @@
+﻿@model IEnumerable<LTW4.Models.LAISUAT>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Lãi suất</h2>
+<div class="row">
+    <div class="col-md-6">
+        @using (Html.BeginForm("Index", "LAISUATs"))
+        {
+            <div class="btn-group">
+                <div class="form-outline d-flex align-items-center" style="border: gray solid 1px; border-radius: 5px;">
+                    <input type="search" id="form1" name="search" class="form-control" placeholder="Tìm kiếm" />
+                </div>
+                <button type="submit" style="margin-left:1% ; border-radius:5px;min-width:fit-content;" class="btn btn-dark"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+            </div>
+        }
+    </div>
+    <div class="col-md-6 d-flex justify-content-end align-items-center">
+        <button style="background-color: #F27979" class="btn" onclick="themlaisuat()"><i class="fa-solid fa-plus"></i> Thêm lãi suất</button>
+    </div>
+</div>
+<br />
+<div class="table-responsive">
+    <table class="table table-hover table-bordered" style="border-radius: 10px; overflow: hidden;">
+        <tr style="background-color: #F27979">
+            <th>
+                Mã lãi suất
+            </th>
+            <th>
+                Kỳ hạn
+            </th>
+            <th>
+                Phần trăm lãi suất
+            </th>
+            <th>
+                Ghi chú
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.malaisuat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.kyhan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.phantramlaisuat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ghichu)
+                </td>
+                <td>
+                    <div class="text-nowrap">
+                        <button class="btn btn-outline-warning btn-sm" onclick="sualaisuat('@item.malaisuat','@item.kyhan','@item.phantramlaisuat','@item.ghichu')"><i class="fa-regular fa-pen-to-square"></i> Sửa</button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="detailslaisuat('@item.malaisuat','@item.kyhan','@item.phantramlaisuat','@item.ghichu')"><i class="fa-solid fa-circle-info"></i> Chi tiết</button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="xoalaisuat('@item.malaisuat','@item.kyhan','@item.phantramlaisuat','@item.ghichu')"><i class="fa-solid fa-trash-can"></i> Xóa</button>
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+@Html.Partial("ModalLaiSuat")
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Scripts/popper.js"></script>
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <script src="~/Scripts/toastr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        function themlaisuat() {
+            $("#laisuatModal").modal('show');
+        };
+
+        function detailslaisuat(malaisuat, kyhan, phantramlaisuat, ghichu) {
+            $('#malaisuat13').val(malaisuat).prop('readonly', true);
+            $('#kyhan13').val(kyhan).prop('readonly', true);
+            $('#phantramlaisuat13').val(phantramlaisuat).prop('readonly', true);
+            $('#ghichu13').val(ghichu).prop('readonly', true);
+            $('#laisuatModal2').modal('show');
+        }
+        function xoalaisuat(malaisuat, kyhan, phantramlaisuat, ghichu) {
+            $('#malaisuat15').val(malaisuat).prop('readonly', true);
+            $('#kyhan15').val(kyhan).prop('readonly', true);
+            $('#phantramlaisuat15').val(phantramlaisuat).prop('readonly', true);
+            $('#ghichu15').val(ghichu).prop('readonly', true);
+            $('#laisuatModal4').modal('show');
+        }
+        function deletelaisuat(malaisuat) {
+            var malaisuat = $('#malaisuat15').val();
+            Swal.fire({
+                icon: 'question',
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc muốn lãi suất này không? Việc xóa lãi suất này cũng sẽ xóa đi tất cả các giao dịch tồn tại loại lãi suất này!',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/LAISUATs/xoalaisuat',
+                        type: 'POST',
+                        data: { id: malaisuat },
+                        success: function (response) {
+                            if (response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Thành công',
+                                    text: 'Đã xóa thành công lãi suất.',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Có lỗi xảy ra, không thể xóa lãi suất này.',
+                                    confirmButtonColor: '#d33',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi',
+                                text: 'Lỗi server.',
+                                confirmButtonColor: '#d33',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        var reloadmodal3 = false
+        function moeditlaisuat(event) {
+            event.preventDefault();
+            var malaisuat = $("#malaisuat13").val();
+            var kyhan = $("#kyhan13").val();
+            var phantramlaisuat = $("#phantramlaisuat13").val();
+            var ghichu = $("#ghichu13").val();
+            $("#malaisuat14").val(malaisuat).prop('readonly', true);
+            $("#kyhan14").val(kyhan);
+            $("#phantramlaisuat14").val(phantramlaisuat);
+            $("#ghichu14").val(ghichu);
+            $("#laisuatModal2").modal('hide');
+            $("#laisuatModal3").modal('show');
+        };
+        $("#laisuatModal3").on('hide.bs.modal', function (e) {
+            $("#laisuatModal2").modal('show');
+        });
+        function saveeditlaisuat(event) {
+            event.preventDefault();
+            var malaisuat = $('#malaisuat14').val();
+            var kyhan = $('#kyhan14').val();
+            var phantramlaisuat = $('#phantramlaisuat14').val();
+            var ghichu = $('#ghichu14').val();
+            $('#malaisuat13').val(malaisuat);
+            $('#kyhan13').val(kyhan);
+            $('#phantramlaisuat13').val(phantramlaisuat);
+            $('#ghichu13').val(ghichu);
+            $.ajax({
+                url: '/LAISUATs/capnhatlaisuat',
+                type: 'POST',
+                data: {
+                    malaisuat: malaisuat,
+                    kyhan: kyhan,
+                    phantramlaisuat: phantramlaisuat,
+                    ghichu: ghichu
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin khách hàng đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            $("#laisuatModal3").modal('hide');
+                            reloadmodal3 = true;
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa thông tin khách hàng này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình cập nhật!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+        $('#laisuatModal2').on('hidden.bs.modal', function (e) {
+            if (reloadmodal3) {
+                location.reload();
+                reloadmodal3 = false;
+            }
+        });
+        function sualaisuat(malaisuat, kyhan, phantramlaisuat, ghichu) {
+            $('#malaisuat12').val(malaisuat).prop('readonly', true);
+            $('#kyhan12').val(kyhan);
+            $('#phantramlaisuat12').val(phantramlaisuat);
+            $('#ghichu12').val(ghichu);
+            $("#laisuatModal1").modal('show');
+        }
+        function luueditls(event) {
+            event.preventDefault();
+            var malaisuat = $('#malaisuat12').val();
+            var kyhan = $('#kyhan12').val();
+            var phantramlaisuat = $('#phantramlaisuat12').val();
+            var ghichu = $('#ghichu12').val();
+            $.ajax({
+                url: '/LAISUATs/capnhatlaisuat',
+                type: 'POST',
+                data: {
+                    malaisuat: malaisuat,
+                    kyhan: kyhan,
+                    phantramlaisuat: phantramlaisuat,
+                    ghichu: ghichu,
+                },
+                success: function (response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Thông tin lãi suất đã được chỉnh sửa.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Đã xảy ra lỗi, không thể chỉnh sửa lãi suất này.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình chỉnh sửa!',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        }
+
+        function savelaisuat(data) {
+            return $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                type: 'POST',
+                url: "/LAISUATs/savelaisuat",
+                data: data,
+                success: function (result) {
+                    if (Object.keys(result).length !== 0) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thành công',
+                            text: 'Lãi suất đã được thêm thành công.',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi',
+                            text: 'Lãi suất chưa được thêm vào.',
+                            confirmButtonColor: '#d33',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text: 'Đã xảy ra lỗi trong quá trình xử lý.',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            });
+        };
+        $(document).ready(function () {
+            $("#savelaisuat").click(function (e) {
+                e.preventDefault();
+                var malaisuat = $("#malaisuat11").val();
+                var kyhan = $("#kyhan11").val();
+                var phantramlaisuat = $("#phantramlaisuat11").val();
+                var ghichu = $("#ghichu11").val();
+                var data = JSON.stringify({
+                    malaisuat: malaisuat,
+                    kyhan: kyhan,
+                    phantramlaisuat: phantramlaisuat,
+                    ghichu: ghichu,
+                });
+                savelaisuat(data).done(function (response) {
+                }).fail(function (xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi khi lưu',
+                        text: error,
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            });
+        });
+    </script>
+}

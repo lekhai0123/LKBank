@@ -1,0 +1,638 @@
+﻿
+@{
+    LTW4.Models.sotietkiemEntities db = new LTW4.Models.sotietkiemEntities();
+}
+<style>
+    input, select, textarea {
+        max-width: none !important;
+    }
+    a {
+        cursor:pointer !important;
+    }
+</style>
+<div class="modal fade" id="stkModal">
+    <div class="modal-dialog modal-lg" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Thêm giao dịch</h3>
+                <a class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="stkModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết khách hàng</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <input type="hidden" id="sosotk" />
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label for="tenkh" class="col-form-label">Tên khách hàng</label>
+                                    <input type="text" id="tenkh" name="tenkh" placeholder="Tên khách hàng" class="form-control" />
+                                </div>
+
+                                <div class="col-md-6 col-12">
+                                    <label for="socmnd" class="col-form-label">Số chứng minh nhân dân</label>
+                                    <input type="text" id="socmnd" name="socmnd" placeholder="Số chứng minh nhân dân" class="form-control" />
+                                </div>
+                                <div class="col-md-6 btn-group">
+                                    <div class="form-group">
+                                        <label class="cus-file-label col-form-label" for="anh">Ảnh</label>
+                                        <input class="custom-file-input form-control" type="file" id="anh" name="anh" onchange="document.getElementById('anhxemtruoc').src = window.URL.createObjectURL(this.files[0])" />
+                                    </div>
+                                    <div class="form-group">
+                                        <img id="anhxemtruoc" src="~/Public/Image/no-image-icon-15.png" width="100" height="100" style="border-radius:10px;margin-left:1%;" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="diachi" class="col-form-label">Địa chỉ</label>
+                                    <input type="text" id="diachi" name="diachi" placeholder="Địa chỉ" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ghichu" class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu" name="ghichu" placeholder="Ghi chú" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 style="margin-top:10px;color:#FF6347">Chi tiết giao dịch</h5>
+                    <hr />
+                    <div class="form-group">
+                        <input type="hidden" id="magiaodich" />
+                        <div class="container">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="malaisuat" class="col-form-label">Loại lãi suất</label>
+                                            <select class="form-control dropdown2" id="malaisuat" name="malaisuat">
+                                                <option disabled selected value="">Chọn lãi suất</option>
+                                                @foreach (var malai in db.LAISUATs.ToList())
+                                                {
+                                                    <option value="@malai.ghichu">@malai.ghichu</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="mangoaite" class="col-form-label">Ngoại tệ</label>
+                                            <select class="form-control dropdown2" id="mangoaite" name="mangoaite">
+                                                <option disabled selected value="">Chọn ngoại tệ</option>
+                                                @foreach (var mangte in db.NGOAITEs.ToList())
+                                                {
+                                                    <option value="@mangte.tenngoaite">@mangte.tenngoaite - @mangte.mangoaite</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="sotiengiaodich" class="col-form-label">Số tiền giao dịch</label>
+                                            <input type="number" id="sotiengiaodich" name="sotiengiaodich" placeholder="Số tiền giao dịch" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-content-center" style="margin-top: 20px;">
+                                    <a id="addToList1" class="btn btn-primary">Thêm vào danh sách</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="detailsTable1" class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:30%">Loại lãi suất</th>
+                                        <th style="width:30%">Ngoại tệ</th>
+                                        <th style="width:30%">Số tiền giao dịch</th>
+                                        <th style="width:10%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button id="savetrade" type="submit" class="btn btn-danger">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!--details modal-->
+<div class="modal fade" id="stkModal1">
+    <div class="modal-dialog modal-xl" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chi tiết giao dịch</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="stkModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết khách hàng</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+                                <input type="hidden" id="magiaodich11" />
+                                <input type="hidden" id="malaisuat11" />
+                                <input type="hidden" id="mangoaite11" />
+                                <input type="hidden" id="sotiengiaodich11" />
+                                <div class="col-md-6 col-12">
+                                    <label for="sosotk" class="col-form-label">Số sổ tài khoản</label>
+                                    <input type="text" id="sosotk1" name="sosotk" class="form-control" />
+                                    <label for="tenkh" class="col-form-label">Tên khách hàng</label>
+                                    <input type="text" id="tenkh1" name="tenkh" placeholder="Tên khách hàng" class="form-control" />                         
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                                    <img id="anh1" style="  max-height:140px; border-radius:10px" />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label for="ngaylap" class="col-form-label">Ngày lập</label>
+                                    <input type="text" id="ngaylap1" name="sosotk" class="form-control" />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label for="socmnd" class="col-form-label">Số chứng minh nhân dân</label>
+                                    <input type="text" id="socmnd1" name="socmnd" placeholder="Số chứng minh nhân dân" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="diachi" class="col-form-label">Địa chỉ</label>
+                                    <input type="text" id="diachi1" name="diachi" placeholder="Địa chỉ" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ghichu" class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu1" name="ghichu" placeholder="Ghi chú" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 style="margin-top:10px;color:#FF6347">Chi tiết giao dịch</h5>
+                    <hr />
+                    <div class="form-group">
+                        <input type="hidden" id="magiaodich" />
+                        <div class="container">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="malaisuat" class="col-form-label">Loại lãi suất</label>
+                                            <select class="form-control" id="malaisuat1" name="malaisuat">
+                                                @foreach (var malai in db.LAISUATs.ToList())
+                                                {
+                                                    <option value="@malai.ghichu">@malai.ghichu</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="mangoaite" class="col-form-label">Ngoại tệ</label>
+                                            <select class="form-control" id="mangoaite1" name="mangoaite">
+                                                @foreach (var mangte in db.NGOAITEs.ToList())
+                                                {
+                                                    <option value="@mangte.tenngoaite">@mangte.tenngoaite - @mangte.mangoaite</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="sotiengiaodich" class="col-form-label">Số tiền giao dịch</label>
+                                            <input type="number" id="sotiengiaodich1" name="sotiengiaodich" placeholder="Số tiền giao dịch" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="detailsTablestk11" class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:13%">Mã giao dịch</th>
+                                        <th style="width:15%">Loại lãi suất</th>
+                                        <th style="width:13%">Ngoại tệ</th>
+                                        <th style="width:13%">Số tiền giao dịch</th>
+                                        <th style="width:13%">Tổng tiền sau lãi</th>
+                                        <th style="width:13%">Ngày giao dịch</th>
+                                        <th style="width:13%">Hạn rút</th>
+                                        <th style="width:7%"></th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+                                </tbody>
+
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="themgiaodich(event)" type="submit" class="btn btn-danger">Thêm giao dịch</button>
+                    <button onclick="moeditkhachhang(event)" type="submit" class="btn btn-danger">Sửa thông tin khách hàng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Edit modal-->
+<div class="modal fade" id="stkModal2">
+    <div class="modal-dialog modal-lg" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chỉnh sửa giao dịch</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="stkModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết khách hàng</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <input type="hidden" id="sosotk2" />
+                            <div class="form-group row">
+                                <div class="col-md-6 col-12">
+                                    <label for="tenkh" class="col-form-label">Tên khách hàng</label>
+                                    <input type="text" id="tenkh2" name="tenkh" placeholder="Tên khách hàng" class="form-control" />
+                                </div>
+                                <div class="col-md-6 btn-group">
+                                    <div class="form-group">
+                                        <label class="cus-file-label col-form-label" for="anh">Ảnh</label>
+                                        <input class="custom-file-input form-control" type="file" id="anh2" name="anh" onchange="document.getElementById('anhxemtruoc2').src = window.URL.createObjectURL(this.files[0])" />
+                                    </div>
+                                    <div class="form-group">
+                                        <img id="anhxemtruoc2" src="~/Public/Image/no-image-icon-15.png" width="100" height="100" style="border-radius:10px;margin-left:1%;" />
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="socmnd" class="col-form-label">Số chứng minh nhân dân</label>
+                                    <input type="text" id="socmnd2" name="socmnd" placeholder="Số chứng minh nhân dân" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="diachi" class="col-form-label">Địa chỉ</label>
+                                    <input type="text" id="diachi2" name="diachi" placeholder="Địa chỉ" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ghichu" class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu2" name="ghichu" placeholder="Ghi chú" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+            <div class="modal-footer">
+                <button  class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button id="btnedit" class="btn btn-danger">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Details delete-->
+<div class="modal fade" id="stkModal3">
+    <div class="modal-dialog modal-xl" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Xóa giao dịch</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="stkModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết khách hàng</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+
+                            <div class="form-group row">
+                                <div class="col-md-6 col-12">
+                                    <label for="sosotk" class="col-form-label">Số sổ tài khoản</label>
+                                    <input type="text" id="sosotk3" name="sosotk" class="form-control" />
+                                    <label for="tenkh" class="col-form-label">Tên khách hàng</label>
+                                    <input type="text" id="tenkh3" name="tenkh" placeholder="Tên khách hàng" class="form-control" />
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-center align-items-center">
+                                    <img id="anh3" style="  max-height:140px; border-radius:10px" />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label for="ngaylap" class="col-form-label">Ngày lập</label>
+                                    <input type="text" id="ngaylap3" name="ngaylap" class="form-control" />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label for="socmnd" class="col-form-label">Số chứng minh nhân dân</label>
+                                    <input type="text" id="socmnd3" name="socmnd" placeholder="Số chứng minh nhân dân" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="diachi" class="col-form-label">Địa chỉ</label>
+                                    <input type="text" id="diachi3" name="diachi" placeholder="Địa chỉ" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ghichu" class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu3" name="ghichu" placeholder="Ghi chú" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 style="margin-top:10px;color:#FF6347">Chi tiết giao dịch</h5>
+                    <hr />
+                    <div class="form-group">
+                        <input type="hidden" id="magiaodich" />
+                        <div class="container">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="malaisuat" class="col-form-label">Loại lãi suất</label>
+                                            <select class="form-control" id="malaisuat3" name="malaisuat">
+                                                @foreach (var malai in db.LAISUATs.ToList())
+                                                {
+                                                    <option value="@malai.ghichu">@malai.ghichu</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="mangoaite" class="col-form-label">Ngoại tệ</label>
+                                            <select class="form-control" id="mangoaite3" name="mangoaite">
+                                                @foreach (var mangte in db.NGOAITEs.ToList())
+                                                {
+                                                    <option value="@mangte.tenngoaite">@mangte.tenngoaite - @mangte.mangoaite</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="sotiengiaodich" class="col-form-label">Số tiền giao dịch</label>
+                                            <input type="number" id="sotiengiaodich3" name="sotiengiaodich" placeholder="Số tiền giao dịch" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="detailsTablestk12" class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:13%">Mã giao dịch</th>
+                                        <th style="width:15%">Loại lãi suất</th>
+                                        <th style="width:13%">Ngoại tệ</th>
+                                        <th style="width:13%">Số tiền giao dịch</th>
+                                        <th style="width:13%">Tổng tiền sau lãi</th>
+                                        <th style="width:13%">Ngày giao dịch</th>
+                                        <th style="width:13%">Hạn rút</th>
+                                        <th style="width:7%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                <button onclick="deletechitietstk()" type="button" class="btn btn-danger">Xóa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--Edit master-->
+<div class="modal fade" id="stkModal4">
+    <div class="modal-dialog modal-lg" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chỉnh sửa khách hàng</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="stkModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết khách hàng</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <input type="hidden" id="sosotk7" />
+                            <div class="form-group row">
+                                <div class="col-md-6 col-12">
+                                    <label for="tenkh" class="col-form-label">Tên khách hàng</label>
+                                    <input type="text" id="tenkh7" name="tenkh" placeholder="Tên khách hàng" class="form-control" />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label for="socmnd" class="col-form-label">Số chứng minh nhân dân</label>
+                                    <input type="text" id="socmnd7" name="socmnd" placeholder="Số chứng minh nhân dân" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="diachi" class="col-form-label">Địa chỉ</label>
+                                    <input type="text" id="diachi7" name="diachi" placeholder="Địa chỉ" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ghichu" class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu7" name="ghichu" placeholder="Ghi chú" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button  class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                    <button onclick="saveeditstk1()" type="button" class="btn btn-danger">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--Edit details-->
+<div class="modal fade" id="chitietModal4">
+    <div class="modal-dialog modal-lg" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Chỉnh sửa giao dịch</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="chitietModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết khách hàng</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Tên khách hàng</label>
+                                    <input type="text" id="tenkh8" name="tenkh" class="form-control" readonly />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-form-label">Số sổ tài khoản</label>
+                                    <input type="text" id="sosotk8" name="sosotk" class="form-control" readonly />
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-form-label">Mã giao dịch</label>
+                                    <input type="text" id="magiaodich8" name="magiaodich" class="form-control" readonly />
+                                </div>
+                                <h5 style="margin-top:10px;color:#FF6347">Chi tiết giao dịch</h5>
+                                <hr />
+                                <div class="col-md-6">
+                                    <label class="col-form-label">Mã lãi suất</label>
+                                    <select class="form-control dropdown2" id="malaisuat8" name="malaisuat">
+                                        @foreach (var malai in db.LAISUATs.ToList())
+                                        {
+                                            <option value="@malai.malaisuat">@malai.ghichu</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="col-form-label">Mã ngoại tệ</label>
+                                    <select class="form-control dropdown2" id="mangoaite8" name="mangoaite">
+                                        @foreach (var mangte in db.NGOAITEs.ToList())
+                                        {
+                                            <option value="@mangte.mangoaite">@mangte.tenngoaite - @mangte.mangoaite</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-12">
+                                    <label class="col-form-label">Số tiền giao dịch</label>
+                                    <input type="text" id="sotiengiaodich8" name="sotiengiaodich" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                    <button onclick="saveeditchitiet1(event)" class="btn btn-danger">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--Create modal 2-->
+<div class="modal fade" id="stkModal5">
+    <div class="modal-dialog modal-lg" style="width:auto">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Thêm giao dịch</h4>
+                <a href="#" class="close" data-bs-dismiss="modal" aria-label="Close">&times;</a>
+            </div>
+            <form id="stkModalform">
+                <div class="modal-body">
+                    <h5 style="color:#FF6347">Chi tiết khách hàng</h5>
+                    <hr />
+                    <div class="container">
+                        <div class="form-group">
+                            <input type="hidden" id="sosotk10" />
+                            <div class="form-group row">
+                                <div class="col-md-6 col-12">
+                                    <label for="tenkh" class="col-form-label">Tên khách hàng</label>
+                                    <input type="text" id="tenkh10" name="tenkh" placeholder="Tên khách hàng" class="form-control" />
+                                </div>
+                                <div class="col-md-6 col-12">
+                                    <label for="socmnd" class="col-form-label">Số chứng minh nhân dân</label>
+                                    <input type="text" id="socmnd10" name="socmnd" placeholder="Số chứng minh nhân dân" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="diachi" class="col-form-label">Địa chỉ</label>
+                                    <input type="text" id="diachi10" name="diachi" placeholder="Địa chỉ" class="form-control" />
+                                </div>
+                                <div class="col-md-12">
+                                    <label for="ghichu" class="col-form-label">Ghi chú</label>
+                                    <input type="text" id="ghichu10" name="ghichu" placeholder="Ghi chú" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h5 style="margin-top:10px;color:#FF6347">Chi tiết giao dịch</h5>
+                    <hr />
+                    <div class="form-group">
+                        <input type="hidden" id="magiaodich" />
+                        <div class="container">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="malaisuat" class="col-form-label">Loại lãi suất</label>
+                                            <select class="form-control dropdown2" id="malaisuat10" name="malaisuat">
+                                                <option disabled selected value="">Chọn lãi suất</option>
+                                                @foreach (var malai in db.LAISUATs.ToList())
+                                                {
+                                                    <option value="@malai.malaisuat">@malai.ghichu</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-12">
+                                        <div class="form-group">
+                                            <label for="mangoaite" class="col-form-label">Ngoại tệ</label>
+                                            <select class="form-control dropdown2" id="mangoaite10" name="mangoaite">
+                                                <option disabled selected value="">Chọn ngoại tệ</option>
+                                                @foreach (var mangte in db.NGOAITEs.ToList())
+                                                {
+                                                    <option value="@mangte.mangoaite">@mangte.tenngoaite - @mangte.mangoaite</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="sotiengiaodich" class="col-form-label">Số tiền giao dịch</label>
+                                            <input type="number" id="sotiengiaodich10" name="sotiengiaodich" placeholder="Số tiền giao dịch" class="form-control" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 d-flex justify-content-center" style="margin-top: 20px;">
+                                    <a id="addToList3" class="btn btn-primary">Thêm vào danh sách</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="detailsTable13" class="table">
+                                <thead>
+                                    <tr>
+                                        <th style="width:30%">Loại lãi suất</th>
+                                        <th style="width:30%">Ngoại tệ</th>
+                                        <th style="width:30%">Số tiền giao dịch</th>
+                                        <th style="width:10%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button  class="btn btn-default" data-bs-dismiss="modal">Thoát</button>
+                    <button id="themdetails" type="submit" class="btn btn-danger">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
