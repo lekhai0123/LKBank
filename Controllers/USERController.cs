@@ -44,8 +44,8 @@ namespace LTW4.Controllers
                 }
                 else
                 {
-                    ViewBag.error = "Login failed";
-                    return RedirectToAction("Login");
+                    ModelState.AddModelError("username", "Sai tài khoản hoặc mật khẩu");
+                    return View();
                 }
             }
             return View();
@@ -71,7 +71,7 @@ namespace LTW4.Controllers
                         db.Configuration.ValidateOnSaveEnabled = false;
                         db.USERs.Add(user);
                         db.SaveChanges();
-                        return RedirectToAction("Index");
+                        return RedirectToAction("Login");
                     }
                     else 
                     {

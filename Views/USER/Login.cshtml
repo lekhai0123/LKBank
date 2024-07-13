@@ -1,4 +1,4 @@
-﻿
+﻿@model LTW4.Models.USER
 @{
     Layout = null;
 }
@@ -28,14 +28,17 @@
                                         <p class="text-white-50 mb-5">Hãy nhập vào thông tin đăng nhập!</p>
                                         <div class="form-outline form-white mb-4">
                                             <input type="text" id="email" name="email" class="form-control form-control-lg" />
-                                            <label class="form-label" for="typeEmailX">Email hoặc Tên người dùng</label>
+                                            <label class="form-label" for="typeEmailX">Email hoặc tên người dùng</label>
                                         </div>
                                         <div class="form-outline form-white mb-4">
                                             <input type="password" id="password" name="password" class="form-control form-control-lg" />
                                             <label class="form-label" for="typePasswordX">Mật khẩu</label>
                                         </div>
-                                        <input type="submit" value="Đăng nhập" class="btn btn-outline-light btn-lg px-5" />
-                                        <a href="~/USER/Index" class="btn btn-outline-light btn-lg px-5">Trang chủ</a>
+                                        @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                                        <div>
+                                            <input type="submit" value="Đăng nhập" class="btn btn-outline-light btn-lg px-5" />
+                                            <a href="~/USER/Index" class="btn btn-outline-light btn-lg px-5">Trang chủ</a>
+                                        </div>
                                     </div>
                                     <div>
                                         <p class="mb-0">Bạn chưa có tài khoản? <a href="~/USER/signUp" class="text-white-50 fw-bold">Đăng ký</a></p>
@@ -49,5 +52,5 @@
             </section>
         </header>
     }
-    </body>
+</body>
 </html>

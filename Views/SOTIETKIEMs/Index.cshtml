@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LTW4.Models.SOTIETKIEM>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Sổ tiết kiệm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
@@ -69,7 +69,7 @@
 
 <h2>Sổ tiết kiệm</h2>
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-6 col-12">
         @using (Html.BeginForm("Index", "SOTIETKIEMs"))
         {
             <div class="btn-group">
@@ -77,12 +77,13 @@
                     <input type="search" id="form1" name="search" class="form-control" placeholder="Tìm kiếm" />
                 </div>
                 <button type="submit" style="margin-left:1% ; border-radius:5px;min-width:fit-content;" class="btn btn-dark"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
-            </div> 
+            </div>
         }
     </div>
-    <div class="col-md-6 d-flex justify-content-end align-items-center">
+    <div class="col-md-6 col-12 d-flex justify-content-md-end justify-content-start align-items-center my-2">
         <button class="btn" style="background-color: #F27979;" onclick="themkh()"><i class="fas fa-user-plus"></i> Thêm giao dịch</button>
     </div>
+
 </div>
 <br />
 <div id="accordion">
@@ -125,7 +126,7 @@
                     <tr style="background-color: #F27979">
                         <th>Ngày giao dịch</th>
                         <th>Số tiền giao dịch</th>
-                        <th>Tổng tiền sau lãi</th>
+                        <th>Tổng tiền sau lãi (VND)</th>
                         <th>Loại lãi suất</th>
                         <th>Ngoại tệ</th>
                         <th></th>
@@ -681,7 +682,7 @@
                 sotiengiaodich = $.trim($("#sotiengiaodich").val()),
                 detailsTableBody1 = $("#detailsTable1 tbody");
             if (malaisuat != "" && mangoaite != "" && sotiengiaodich != "") {
-                var giaodichItem = '<tr><td>' + malaisuat + '</td><td>' + mangoaite + '</td><td>' + sotiengiaodich + '</td><td><a href="#" class="delete-product" data-itemId="0">Xóa</a></td></tr>';
+                var giaodichItem = '<tr><td>' + malaisuat + '</td><td>' + mangoaite + '</td><td>' + sotiengiaodich + '</td><td><a href="#" class="delete-product" data-itemId="0"><i class="fa-solid fa-trash-can"></i></a></td></tr>';
                 detailsTableBody1.append(giaodichItem);
                 clearItem();
             }
@@ -759,7 +760,6 @@
                 }
             });
         });
-
 
         function savetrade(data) {
             return $.ajax({
@@ -842,6 +842,7 @@
                 }
             });
         });
+        
 
 
 

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<LTW4.Models.NGOAITE>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Ngoại tệ";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -18,7 +18,7 @@
             </div>
         }
     </div>
-    <div class="col-md-6 d-flex justify-content-end align-items-center">
+    <div class="col-md-6 col-12 d-flex justify-content-md-end justify-content-start align-items-center my-2">
         <button style="background-color: #F27979" class="btn" onclick="themngoaite()"><i class="fa-solid fa-plus"></i> Thêm ngoại tệ</button>
     </div>
 </div>
@@ -44,7 +44,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.tenngoaite)
                 </td>
-                <td style="width:18%">
+                <td style="width:18%" class="text-nowrap">
                     <button class="btn btn-outline-warning btn-sm" onclick="suangoaite('@item.mangoaite','@item.tenngoaite')"><i class="fa-regular fa-pen-to-square"></i> Sửa</button>
                     <button class="btn btn-outline-primary btn-sm" onclick="chitietngoaite('@item.mangoaite')"><i class="fa-solid fa-circle-info"></i> Chi tiết</button>
                     <button class="btn btn-outline-danger btn-sm" onclick="xoangoaite('@item.mangoaite')"><i class="fa-solid fa-trash-can"></i> Xóa</button>

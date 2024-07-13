@@ -44,8 +44,8 @@ namespace LTW4.Controllers
                         }
                         else
                         {
-                            var m = "SO" + ma.ToString();
-                            var n = db.SOTIETKIEMs.Find(m);
+                            var m = "GD" + ma.ToString();
+                            var n = db.CHITIETs.Find(m);
                             if (n == null)
                             {
                                 magiaodich = m;

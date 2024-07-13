@@ -84,8 +84,6 @@ namespace LTW4.Controllers
                         ghichu = hd.ghichu,
                     })
                 };
-
-
                 return Content(JsonConvert.SerializeObject(responseData), "application/json");
             }
             catch (Exception ex)
